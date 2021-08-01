@@ -9,7 +9,12 @@ async function get(id) {
 
   if (user !== null) {
     user._id = user._id.toString();
-    user.cart = user.cart.map((id) => id.toString());
+    try{
+      user.cart = user.cart.map((id) => id.toString());
+    }catch(err) {
+      user.cart = user.cart
+    }
+    
   }
 
   return user;
