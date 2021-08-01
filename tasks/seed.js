@@ -62,6 +62,14 @@ const createUser = (email, firstName, lastName, isAdmin, password, address, cart
     }
 }
 
+const createOrder = (items, owner, datePlaced,price) => {
+    return{
+        items:Array.isArray(items) ? items : [items],
+        owner:owner,
+        datePlaced:datePlaced,
+        price:price
+    }
+}
 
 async function seedDB() {
     try {
@@ -126,6 +134,19 @@ async function seedDB() {
         }
         console.log("users seeded");
         const userIds = Object.keys(userIdsMap)
+
+        //adding Orders
+        const orderIdsMap = {}
+        for(const userId of userIds){
+            //let product1 = await data.products.getbyName('A bike')
+            let product2 = await data.products.getbyName('Average Bike')
+            let newOrder = createOrder([product2._id], userId, '7/31/2021',121)
+            const {_id} = await data.orders.create(newOrder)
+            orderIdsMap[_id] = newOrder
+        }
+        console.log("orders seeded");
+        const orderIds = Object.keys(orderIdsMap)
+
 
         console.log("Seeding DB completed!");
         const db = await mongoConnection();

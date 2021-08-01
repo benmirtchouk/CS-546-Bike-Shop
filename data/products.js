@@ -39,9 +39,33 @@ async function remove(id) {
   }
 }
 
+async function getbyName(name){
+  //adding helper func to filter by name
+  const productsCollection = await products();
+  const product = await productsCollection.findOne({ name: name });
+
+  if (product !== null) {
+    product._id = product._id.toString();
+  }
+
+  return product;
+}
+
+async function updateStock(id, latestStock){
+  //helper func to update stock
+  const productsCollection = await products();
+  const updateInfo = await productsCollection.updateOne({ _id: ObjectId(id) }, { $set: {stock:latestStock} });
+
+  if (updateInfo.modifiedCount === 0) {
+    throw `Could not update product with id ${id}`;
+  }  
+}
+
 module.exports = {
   get,
   create,
   update,
-  remove
+  remove,
+  getbyName,
+  updateStock
 };
