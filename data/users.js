@@ -28,7 +28,7 @@ async function create(user) {
       'city': user.address.city,
       'zipcode': user.address.zipcode
     },
-    'cart': []
+    'cart': user.cart
   };
   
   const usersCollection = await users();

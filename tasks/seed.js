@@ -41,6 +41,26 @@ const createProduct = (name, description, tags, stock, pictures, price, specs ) 
 }
 
 
+const createAddress = (streetAddress, country, city, zipCode) => {
+    return {
+        address: streetAddress,
+        country: country,
+        city: city,
+        zipcode: zipCode
+    }
+}
+
+const createUser = (email, firstName, lastName, isAdmin, password, address, cart) => {
+    return {
+        email: email,
+        firstName: firstName,
+        lastName: lastName,
+        admin: isAdmin,
+        password: password,
+        address: address,
+        cart: Array.isArray(cart) ? cart : [cart]
+    }
+}
 
 
 async function seedDB() {
@@ -55,6 +75,7 @@ async function seedDB() {
         await orderCollection.deleteMany({});
 
 
+        // Create the spec objects, these can be reused between products
         const specs = 
         [
             createSpecs(5, 10, 15, "someFrame", "someFork"),
@@ -71,32 +92,45 @@ async function seedDB() {
 
         ]
         
-        const mongoBikeIds = {}
+        // This is a map of the string id -> the inserted bike object. 
+        const mongoBikeIdsMap = {}
         for(const product of productsData) {
             const {_id } = await data.products.create(product)
-            mongoBikeIds[_id] = product
+            mongoBikeIdsMap[_id] = product
         }
+        console.log("Products seeded");
+        // Pull out the ids separately if the backing object is not needed for context
+        const mongoBikeIds = Object.keys(mongoBikeIdsMap)
 
+        // Address are only US addresses as zip code is an int
+        const bikeShopAddress = createAddress("600 Bike Shop Road", "United States", "Hoboken", 07030)
+        const addresses = [
+            createAddress("123 Fake Street", "United States", "AnyTown", 01234),
+            createAddress("1 Castle Point Terrace", "United States", "Hoboken", 07030),
+            createAddress("350 Oak Avenue", "United States", "SomeTown", 55555)
+        ]
 
-        console.log(mongoBikeIds);
+        const bikeShopEmail = "bikeShop.com"
+        const userData = [
+            createUser(`owner@${bikeShopEmail}`, "John", "Smith", true, "2409e5123615094ba274e0f0a87cf69df178fac2aa574b77a5360019e5b466e1", bikeShopAddress, []),
+            createUser(`frontDesk@${bikeShopEmail}`, "Johnny", "Smith", true, "496259b009d76112545ac62b77424b3ae8478862a26e09c0409860e6437f820f", bikeShopAddress, [] ),
+            createUser('bikeBuyer@gmail.com', "Bob", "Wilson", false, "4836bb7bd2171483f95423b51701f79ae26e25d9ccb52e6bb3cd324e04bb35b2", addresses[0], mongoBikeIds),
+            createUser('onlyTheBest@yahoo.com', "Jessica", "Miller", false, "2e3ae0b394ce329349491cef54ee7533ffd9a1630a51c988f84d441b0a02b4e8", addresses[2], mongoBikeIdsMap[0]),
+            createUser("attila@stevens.edu", "Attila", "The Duck", false, "c8553a39235a2c31e1260839207537deef67b0e091764156bca5d5ae51e54ebd", addresses[1], [])
+        ]
 
-
-
-        // Reminder to write comment that ids return string, and pass in as string
-
-        //let userData = [];
-        //let productData = [];
-        //let reviewData = [];
-        //let orderData = [];
-
-        //await userCollection.insertMany(userData);
-        //await productCollection.insertMany(productData);
-        //await reviewCollection.insertMany(reviewData);
-        //await orderCollection.insertMany(orderData);
+        const userIdsMap = {}
+        for(const user of userData) {
+            const {_id } = await data.users.create(user)
+            userIdsMap[_id] = user
+        }
+        console.log("users seeded");
+        const userIds = Object.keys(userIdsMap)
 
         console.log("Seeding DB completed!");
         const db = await mongoConnection();
         await db.serverConfig.close();
+        console.log("Connection closed!");
     } catch (err) {
         console.error(err);
     }
