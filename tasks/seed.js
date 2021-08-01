@@ -5,7 +5,7 @@ const products = mongoCollections.products;
 const reviews = mongoCollections.reviews;
 const orders = mongoCollections.orders;
 const data = require("../data")
-
+const { ObjectId } = require('mongodb');
 // #MARK:- Data construction operations, does *not* do validation, that is handled in data functions
 
 const isNonBlankString = (string) => {
@@ -68,6 +68,17 @@ const createOrder = (items, owner, datePlaced,price) => {
         owner:owner,
         datePlaced:datePlaced,
         price:price
+    }
+}
+
+const createReview = (owner, product, verified, rating, body, pictures) => {
+    return {
+        owner:owner,
+        product:product,
+        verified:verified,
+        rating:rating,
+        body:body,
+        pictures:Array.isArray(pictures) ? pictures : [pictures]
     }
 }
 
@@ -140,13 +151,23 @@ async function seedDB() {
         for(const userId of userIds){
             //let product1 = await data.products.getbyName('A bike')
             let product2 = await data.products.getbyName('Average Bike')
-            let newOrder = createOrder([product2._id], userId, '7/31/2021',121)
+            let newOrder = createOrder([product2._id], ObjectId(userId), '7/31/2021',121)
             const {_id} = await data.orders.create(newOrder)
             orderIdsMap[_id] = newOrder
         }
         console.log("orders seeded");
         const orderIds = Object.keys(orderIdsMap)
 
+        //adding Reviews
+        const reviewIdsMap = {}
+        for(const orderId of orderIds){
+            let order = await data.orders.get(ObjectId(orderId))
+            let newReview = createReview(order.owner, order.items[0], true, 3, "Average Bike with average price", "raw code for png")
+            const {_id} = await data.reviews.create(newReview)
+            reviewIdsMap[_id] = newReview            
+        }
+        console.log("review seeded");
+        const reviewIds = Object.keys(reviewIdsMap)
 
         console.log("Seeding DB completed!");
         const db = await mongoConnection();
