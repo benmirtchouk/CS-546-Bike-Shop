@@ -21,10 +21,37 @@ async function create(order) {
   const owner = users.get(order.owner);
   if (owner === null) throw `no user with id ${order.owner}`;
   
-  order.items.forEach(id => {
-    const product = products.get(review.product);
-    if (product === null) throw `no product with id ${review.product}`;
-  });
+  // order.items.forEach(id => {
+  //   const product = products.get(id);
+  //   if (product === null) {
+  //     throw `no product with id ${id}`;
+  //   }
+  //   else if (product.stock === 0){
+  //     throw `no product left IN STOCK with id ${id}`;
+  //   }
+  //   else{
+  //     //update product's stock
+  //     product.stock = product.stock - 1;
+  //     products.update(id, product)
+  //   }
+  // });
+
+  for (const id of order.items){
+    const product = await products.get(id);
+    if (product === null) {
+      throw `no product with id ${id}`;
+    }
+    else if (product.stock === 0){
+      throw `no product left IN STOCK with id ${id}`;
+      //TODO: Do we want to throw exception here? 
+      //What if user orders multiple different bikes
+    }
+    else{
+      //update product's stock
+      let currentStock = product.stock - 1;
+      await products.updateStock(ObjectId(id), currentStock)
+    }    
+  }
 
   const newOrder = {
     'items': order.items.map(id => ObjectId(id)),

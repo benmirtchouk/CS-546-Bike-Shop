@@ -27,7 +27,7 @@ async function create(review) {
   const newReview = {
     'owner': ObjectId(review.owner),
     'product': ObjectId(review.product),
-    'verified': review.verified,
+    'verified': review.verified, //TODO, do we need to automate the verification process?
     'rating': review.rating,
     'likes': 0,
     'dislikes': 0,
