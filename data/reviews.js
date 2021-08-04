@@ -36,10 +36,15 @@ async function create(review) {
   };
 
   const reviewsCollection = await reviews();
-  const insertInfo = await reviewsCollection.insertOne(review);
+  const insertInfo = await reviewsCollection.insertOne(newReview);
   if (insertInfo.insertedCount === 0) throw 'Could not add new review';
 
-  return insertInfo.ops[0];
+  let inserted = insertInfo.ops[0];
+  inserted._id = inserted.owner.toString();
+  inserted.owner = inserted.owner.toString();
+  inserted.product = inserted.owner.toString();
+
+  return inserted;
 }
 
 async function update(id, review) {
