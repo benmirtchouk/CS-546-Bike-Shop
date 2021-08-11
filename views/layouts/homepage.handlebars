@@ -1,0 +1,20 @@
+{{#if bikes}}
+<h1>Product Offerings</h1> 
+<div class="products">
+{{#each bikes}}
+    <div class="productCard">
+        <div> Name: {{name}} </div>
+        <div class="productSubtitle">
+            {{#if isLowStock }}
+                <span class="stock lowStock">Only {{stock}} left in stock, order now!</span>
+            {{else}}
+                <span class="stock ">Left in Stock: {{stock}}</span>
+            {{/if}} 
+            <span class="price">Price: ${{price}}</span>
+        </div>
+        <p>Description: {{description}}</p>
+        <span>Specs: Coming soon!</span>
+    </div>
+{{/each}}
+</div>
+{{/if}}

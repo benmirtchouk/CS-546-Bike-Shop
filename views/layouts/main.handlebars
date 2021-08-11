@@ -2,10 +2,23 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>{{title}}</title>
+    <title>{{page.title}}</title>
     <link rel="stylesheet" href="/public/site.css">
   </head>
   <body>
-    {{{body}}}
+    <header>
+      {{header.title}}
+      <form method="GET" action="login">
+        <button type="submit"> Log In or Register</button>
+      </form>
+    </header>
+    <div id="pageContent">
+      {{{body}}}
+    </div>
+    {{#if footer}}
+    <footer>
+      {{footer.text}}
+    </footer>
+    {{/if}}
   </body>
 </html>
