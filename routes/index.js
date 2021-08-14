@@ -1,8 +1,11 @@
 const mongoCollections = require("../config/mongoCollections");
+const userRoutes = require("./user")
 const products = require("../data").products;
 
 
 const constructorMethod = (app) => {
+
+  app.use('/user', userRoutes);
 
   app.use('/', async (req, res ) => {
 
