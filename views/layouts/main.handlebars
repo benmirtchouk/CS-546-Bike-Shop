@@ -14,7 +14,7 @@
             <input type="radio" name="loginRegistration" class="tab" id="loginTab" checked />
             <label for="loginTab" >Log in</label>
             <div class="tabContent">
-              <form method="POST" action="user/login">
+              <form method="POST" action="user/login" id="loginForm">
                 <label>
                   Email: 
                   <input type="email" name="email" required/>
@@ -32,7 +32,7 @@
             <input type="radio" name="loginRegistration" class="tab" id="registerTab" />
             <label for="registerTab">Register</label>
             <div class="tabContent">
-                            <form method="POST" action="user/register">
+              <form method="POST" action="user/register" id="registerForm">
                 <label>
                   Email: 
                   <input type="email" name="email" required />
