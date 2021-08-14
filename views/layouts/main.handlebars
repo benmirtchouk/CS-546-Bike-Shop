@@ -3,14 +3,61 @@
   <head>
     <meta charset="utf-8">
     <title>{{page.title}}</title>
-    <link rel="stylesheet" href="/public/site.css">
+    <link rel="stylesheet" href="/css/site.css">
   </head>
   <body>
     <header>
       {{header.title}}
-      <form method="GET" action="login">
-        <button type="submit"> Log In or Register</button>
-      </form>
+      <button class = "tabDropDown">Log in or Register </button>
+      <div class="tabCollection gone">
+        <div>
+            <input type="radio" name="loginRegistration" class="tab" id="loginTab" checked />
+            <label for="loginTab" >Log in</label>
+            <div class="tabContent">
+              <form method="POST" action="login">
+                <label>
+                  Email: 
+                  <input type="email" name="email" required/>
+                </label>
+                  <label>
+                  Password: 
+                  <input type="password" name="password" required/>
+                </label>
+                <button type="submit">Log In!</button>
+              </form>
+            </div>
+        </div>
+      
+        <div>
+            <input type="radio" name="loginRegistration" class="tab" id="registerTab" />
+            <label for="registerTab">Register</label>
+            <div class="tabContent">
+                            <form method="POST" action="login">
+                <label>
+                  Email: 
+                  <input type="email" name="email" required />
+                </label>
+                  <label>
+                  Password: 
+                  <input type="password" name="password" required/>
+                </label>
+                <label>
+                  Confirm Password: 
+                  <input type="password" name="passwordConfirm" required/>
+                </label>
+                  <label>
+                  First Name: 
+                  <input type="text" name="firstName" required/>
+                </label>
+                <label>
+                  Last Name: 
+                  <input type="text" name="lastName" required/>
+                </label>
+                <button type="submit">Register!</button>
+              </form>
+            </div>
+        </div>
+    </div>
     </header>
     <div id="pageContent">
       {{{body}}}
@@ -20,5 +67,6 @@
       {{footer.text}}
     </footer>
     {{/if}}
+    <script src="/js/loginForm.js"></script>
   </body>
 </html>
