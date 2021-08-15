@@ -1,11 +1,11 @@
 const express = require('express');
 const app = express();
-const static = express.static(__dirname + '/public');
+const static = express.static('public');
 
 const configRoutes = require('./routes');
 const exphbs = require('express-handlebars');
 
-app.use('/public', static);
+app.use(static);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 

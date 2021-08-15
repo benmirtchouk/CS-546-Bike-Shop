@@ -51,6 +51,17 @@ async function getbyName(name){
   return product;
 }
 
+async function getAllUpTo(limit){
+
+  if(!Number.isInteger(limit) || limit < 1) { throw "Invalid limit specified" }
+  const productsCollection = await products();
+  const productList = await productsCollection.find({}).limit(limit).toArray();
+
+  productList.map( product => product._id = product._id.toString())
+
+  return productList;
+}
+
 async function updateStock(id, latestStock){
   //helper func to update stock
   const productsCollection = await products();
@@ -63,6 +74,7 @@ async function updateStock(id, latestStock){
 
 module.exports = {
   get,
+  getAllUpTo,
   create,
   update,
   remove,
