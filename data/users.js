@@ -33,7 +33,7 @@ async function create(user) {
       'city': user.address.city,
       'zipcode': user.address.zipcode
     },
-    'cart': user.cart
+    'cart': []
   };
   
   const usersCollection = await users();
@@ -52,9 +52,9 @@ async function update(id, user) {
   }
 }
 
-async function addToCart(id, product) {
+async function addToCart(id, productid) {
   const usersCollection = await users();
-  const updateInfo = usersCollection.updateOne({ _id: id }, { $push: { cart: product } });
+  const updateInfo = usersCollection.updateOne({ _id: id }, { $push: { cart: ObjectId(productid) } });
 
   if (updateInfo.modifiedCount === 0) {
     throw `Could not update user with id ${id}`;

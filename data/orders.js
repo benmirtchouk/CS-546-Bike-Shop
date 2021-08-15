@@ -66,7 +66,11 @@ async function create(order) {
   const insertInfo = await ordersCollection.insertOne(newOrder);
   if (insertInfo.insertedCount === 0) throw 'Could not add new order';
 
-  return insertInfo.ops[0];
+  let inserted = insertInfo.ops[0];
+  inserted.items = inserted.items.map((id) => id.toString());
+  inserted.owner = inserted.owner.toString();
+
+  return inserted;
 }
 
 async function addUpdate(id, update) {
