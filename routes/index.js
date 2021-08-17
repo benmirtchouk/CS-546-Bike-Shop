@@ -1,5 +1,8 @@
+
 const userRoutes = require("./user");
+const userRoutes = require("./user")
 const productRoutes = require("./products");
+const adminRoutes = require("./admin");
 const products = require("../data").products;
 const ordersRoutes = require("./orders")
 
@@ -7,6 +10,8 @@ const constructorMethod = (app) => {
   app.use('/user', userRoutes);
   app.use('/bikes', productRoutes);
   app.use('/orders', ordersRoutes)
+
+  app.use('/admin', adminRoutes);
 
   app.get('/', async (req, res ) => {
 
