@@ -106,7 +106,7 @@ async function seedDB() {
 
         const productsData = 
         [
-            createProduct("A bike", "The best bike", ["Fast", "Colorful"], 3, [], 3000.15, specs[2]),
+            createProduct("A bike", "The best bike", ["Fast", "Colorful"], 4, [], 3000.15, specs[2]),
             createProduct("Cheap Bike", "The cheapest bike money can buy", ["Slow", "Rusted", "No Kickstand"], 10, [], 100.20, specs[0]),
             createProduct("Average Bike", "A normal street bike", ["Street"], 20, [], 150.60, specs[1]),
             createProduct("Child's Training Bike", "The perfect training bike!", ["Small", "Child", "Training Wheels"], 5, [], 50.10, specs[0])
@@ -154,11 +154,22 @@ async function seedDB() {
         const userIds = Object.keys(userIdsMap);
 
         //adding Orders
+        
+        // Define the bikes the users have bought
+        bikeOrderMap = {}
+        bikeOrderMap[userIds[0]] = [mongoBikeIds[0]];
+        bikeOrderMap[userIds[1]] = [];
+        bikeOrderMap[userIds[2]] = mongoBikeIds.slice(1,4);
+        bikeOrderMap[userIds[3]] = [mongoBikeIds[0]];
+        bikeOrderMap[userIds[4]] = [ mongoBikeIds[0], mongoBikeIds[2]];
+
         const orderIdsMap = {};
         for(const userId of userIds){
             //let product1 = await data.products.getbyName('A bike')
-            let product2 = await data.products.getbyName('Average Bike');
-            let newOrder = createOrder([product2._id], userId, '7/31/2021',121);
+
+            let products = bikeOrderMap[userId];
+            if(products.length == 0) { continue; }
+            let newOrder = createOrder(products, userId, '7/31/2021',121);
             const {_id} = await data.orders.create(newOrder);
             orderIdsMap[_id] = newOrder;
         }
