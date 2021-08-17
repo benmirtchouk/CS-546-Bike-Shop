@@ -95,10 +95,26 @@ async function remove(id) {
   }
 }
 
+async function aggregateOrders() {
+
+  const ordersCollection = await orders();
+  // Count all occurrences a product was bought through the DB. Ideally this would be cached in an application at scale. 
+  const data = await ordersCollection.aggregate([
+              {$project: {"_id": false, "items":true}}, 
+              {$unwind: "$items"},  
+              {$group: {_id: '$items', count: { $sum : 1} }}
+              ])
+              .toArray()
+  // As toArray does not allow pretty chaining, allow for the await to finish and collect the value before reducing. 
+  // Then reduce the array in form `[{key1: count1}, {key1: count1}]` to an object of form `{key1: count1, key2: count2} to expose a dictionary with constant time look-up
+  return data.reduce( (acc, curr) => ({ ...acc, [curr._id.toString()]:  curr.count}), {})
+}
+
 module.exports = {
   get,
   create,
   addUpdate,
   updateStatus,
   remove,
+  aggregateOrders
 };
