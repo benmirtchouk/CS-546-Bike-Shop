@@ -3,6 +3,11 @@ body {
 
 }
 
+.productCard.scrollTarget {
+    background-color: gold;
+    filter: drop-shadow(.5rem 1.5rem 1rem gold);
+}
+
 .gone {
     display: none;
 }
