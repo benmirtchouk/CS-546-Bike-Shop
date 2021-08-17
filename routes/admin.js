@@ -33,11 +33,11 @@ router.get("/", async (req, res) => {
         product.price = product.price.toFixed(2);
       });
 
-      // Grab the top sellers, and sort in descending order for handlebars
+      // Grab the top sellers, by revenue, and sort in descending order for handlebars
       const topSellers = productList
                         .filter( e => e.orderCount > 0 )
-                        .sort( (a, b) => {return a.orderCount + b.orderCount })
-                        .slice(0, 5);
+                        .sort( (a, b) => {return a.revenue + b.revenue })
+                        .slice(0, 3);
 
     const handlebarData = {
         header: {
