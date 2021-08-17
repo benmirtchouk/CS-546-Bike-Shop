@@ -70,7 +70,7 @@ async function getAllUpTo(limit){
   const productsCollection = await products();
   const productList = await productsCollection.find({}).limit(limit).toArray();
 
-  productList.map( product => product._id = product._id.toString())
+  productList.forEach( product => product._id = product._id.toString())
 
   return productList;
 }
