@@ -1,0 +1,40 @@
+<h1>Welcome {{user.firstName}} {{user.lastName}}, </h1>
+
+{{#if topSellers}}
+<div class="products">
+    <h2> Top Sellers</h2>
+{{#each topSellers}}
+<div class="productCard topSellerCard" data-id="{{_id}}">
+        <div> Name: {{name}} </div>
+        <div class="productSubtitle">
+            <span >Amount sold: {{orderCount}} Totalling: {{revenue}}</span>
+        </div>
+</div>
+{{/each}}
+</div>
+{{/if}}
+
+<br />
+<br />
+
+{{#if products}}
+<div class="products">
+    <h2>All Products</h2> 
+{{#each products}}
+
+<div class="productCard scrollToProductCard"  data-id="{{_id}}">
+        <div> Name: {{name}} </div>
+        <div class="productSubtitle">
+            <span >Stock: {{stock}}</span>
+            <span>
+                <button class="productEditButton">Edit</button>
+                <button class="productRemoveButton">Remove for Sale</button>
+            </span>
+        </div>
+
+</div>
+
+{{/each}}
+</div>
+{{/if}}
+<script src="/js/adminPageLogic.js"></script>
