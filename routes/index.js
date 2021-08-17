@@ -1,12 +1,10 @@
-const mongoCollections = require("../config/mongoCollections");
-const userRoutes = require("./user")
+const userRoutes = require("./user");
+const productRoutes = require("./products");
 const products = require("../data").products;
 
-
 const constructorMethod = (app) => {
-
   app.use('/user', userRoutes);
-
+  app.use('/bikes', productRoutes);
   app.use('/', async (req, res ) => {
 
     const productList = await products.getAllUpTo(20);
@@ -29,8 +27,6 @@ const constructorMethod = (app) => {
     }
     res.render("layouts/homepage", handlebarData)
   })
-
-
   app.use('*', (req, res) => {
     res.status(404).send();
   });
