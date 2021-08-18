@@ -2,8 +2,12 @@ const { ObjectId } = require('mongodb');
 const mongoCollections = require('../config/mongoCollections');
 const users = mongoCollections.users;
 const products = require('./products');
+const new_user_schema = require('../schemas/new_user');
+const bcrypt = require('bcrypt');
 
 async function get(id) {
+  if (typeof id !== 'string') throw `id must be a string but ${typeof id} provided`;
+
   const usersCollection = await users();
   let user = await usersCollection.findOne({ _id: ObjectId(id) });
 
@@ -20,36 +24,38 @@ async function get(id) {
   return user;
 }
 
-async function create(user) {
-  let newUser = {
-    'email': user.email,
-    'firstName': user.firstName,
-    'lastName': user.lastName,
-    'admin': user.admin,
-    'password': user.password,
-    'address': {
-      'address': user.address.address,
-      'country': user.address.country,
-      'city': user.address.city,
-      'zipcode': user.address.zipcode
-    },
-    'cart': []
-  };
+async function getByEmail(email) {
+  if (typeof email !== 'string') throw `email must be a string but ${typeof email} provided`;
   
   const usersCollection = await users();
-  const insertInfo = await usersCollection.insertOne(newUser);
+  let user = await usersCollection.findOne({ email: email });
+
+  if (user !== null) {
+    user._id = user._id.toString();
+    try{
+      user.cart = user.cart.map((id) => id.toString());
+    }catch(err) {
+      user.cart = user.cart
+    }
+  }
+
+  return user;
+}
+
+async function create(user_data) {
+  const { error, value: user } = new_user_schema.validate(user_data, {abortEarly: false, allowUnknown: true, stripUnknown: true});
+  if (error) throw error.details.map(x => x.message).join(', ');
+
+  user.cart = [];
+  user.admin = false;
+  delete user.confirmPassword;
+  user.password = await bcrypt.hash(user.password, 10);
+
+  const usersCollection = await users();
+  const insertInfo = await usersCollection.insertOne(user);
   if (insertInfo.insertedCount === 0) throw 'Could not add new user';
 
   return insertInfo.ops[0];
-}
-
-async function update(id, user) {
-  const usersCollection = await users();
-  const updateInfo = await usersCollection.updateOne({ _id: ObjectId(id) }, { $set: user });
-
-  if (updateInfo.modifiedCount === 0) {
-    throw `Could not update user with id ${id}`;
-  }
 }
 
 async function addToCart(id, productid) {
@@ -80,8 +86,8 @@ async function remove(id) {
 
 module.exports = {
   get,
+  getByEmail,
   create,
-  update,
   addToCart,
   getCart,
   remove

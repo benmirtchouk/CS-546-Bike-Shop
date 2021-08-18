@@ -18,21 +18,18 @@ const errorForName = (name) => {
     if (name.trim().length == 0 ) { return "Must be non empty" }
 }
 
-const validateEmailPasswordOrError = (emailField, passwordField, event) => {
+const validateEmailPasswordOrError = (emailField, passwordField) => {
     const email = emailField.value;
     const emailError = errorForEmailEntry(email);
     if(emailError != null) {
         alert(`Email: ${emailError}`);
-        event.preventDefault();
-        return false ;
+        return false;
     }
 
     const password = passwordField.value;
-
     const passwordError = errorForPassword(password);
     if (passwordError != null) {
         alert(`Password: ${passwordError}`);
-        event.preventDefault;
         return false;
     }
 
@@ -78,14 +75,39 @@ const validateEmailPasswordOrError = (emailField, passwordField, event) => {
     const loginForm = document.getElementById("loginForm");
 
     loginForm.addEventListener('submit', event => {
-        const inputs = loginForm.elements;
-        validateEmailPasswordOrError(inputs[0], inputs[1], event);
+        event.preventDefault();
 
+        const inputs = loginForm.elements;
+        validateEmailPasswordOrError(inputs[0], inputs[1]);
+
+        var requestConfig = {
+            method: 'POST',
+            url: '/user/login',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                email: inputs[0].value,
+                password: inputs[1].value,
+            })
+        };
+
+        $.ajax(requestConfig).then((res) => {
+            if (res.error) {
+                alert(res.error);
+            } else {
+                $("#unauth-header").hide()
+                $("#auth-header").html(`<div><p>${res.user.firstName}</p><p>${res.user.lastName}</p><a href="/user/logout">Log Out</a></div>`)
+                $("#auth-header").show()
+            }
+        });
+
+        return false;
     })
 
     const registerForm = document.getElementById("registerForm");
 
     registerForm.addEventListener('submit', event => {
+        event.preventDefault();
+
         const inputs = registerForm.elements;
 
         const passwordField = inputs[1];
@@ -94,7 +116,6 @@ const validateEmailPasswordOrError = (emailField, passwordField, event) => {
         const confirmPassword = inputs[2].value;
         if (password != confirmPassword) {
             alert("Passwords do not match");
-            event.preventDefault();
             return;
         }
 
@@ -103,11 +124,34 @@ const validateEmailPasswordOrError = (emailField, passwordField, event) => {
             const nameError = errorForName(name);
             if(nameError) {
                 alert(`${label} Name: ${nameError}`)
-                event.preventDefault();
                 return;
             }
         }
-        
+
+        var requestConfig = {
+            method: 'POST',
+            url: '/user/register',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                email: inputs[0].value,
+                password,
+                confirmPassword,
+                firstName: inputs[3].value,
+                lastName: inputs[4].value
+            })
+        };
+
+        $.ajax(requestConfig).then((res) => {
+            if (res.error) {
+                alert(res.error);
+            } else {
+                $("#unauth-header").hide()
+                $("#auth-header").html(`<div><p>${res.user.firstName}</p><p>${res.user.lastName}</p><a href="/user/logout">Log Out</a></div>`)
+                $("#auth-header").show()
+            }
+        });
+
+        return false;
     })
 
 })()
