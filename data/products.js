@@ -18,7 +18,9 @@ async function create(product) {
   const insertInfo = await productsCollection.insertOne(product);
   if (insertInfo.insertedCount === 0) throw 'Could not add new product';
 
-  return insertInfo.ops[0];
+  const new_product = insertInfo.ops[0];
+  new_product._id = new_product._id.toString();
+  return new_product;
 }
 
 async function update(id, product) {

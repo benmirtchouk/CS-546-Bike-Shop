@@ -134,7 +134,7 @@ async function seedDB() {
             createUser(`owner@${bikeShopEmail}`, "John", "Smith", true, "secure_password", bikeShopAddress, []),
             createUser(`frontDesk@${bikeShopEmail}`, "Johnny", "Smith", true, "helloworld!", bikeShopAddress, [] ),
             createUser('bikeBuyer@gmail.com', "Bob", "Wilson", false, "familymemberbirthday", addresses[0], mongoBikeIds),
-            createUser('onlyTheBest@yahoo.com', "Jessica", "Miller", false, "very_secure_password", addresses[2], mongoBikeIdsMap[0]),
+            createUser('onlyTheBest@yahoo.com', "Jessica", "Miller", false, "very_secure_password", addresses[2], mongoBikeIds[0]),
             createUser("attila@stevens.edu", "Attila", "The Duck", false, "ImOutOfCreativity", addresses[1], [])
         ];
 
@@ -144,6 +144,7 @@ async function seedDB() {
             userIdsMap[_id] = user;
 
             for(const productid of user.cart) {
+                console.log('addtocart',_id,productid)
                 data.users.addToCart(_id, productid);
             }
         }

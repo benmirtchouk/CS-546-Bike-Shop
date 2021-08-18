@@ -13,12 +13,7 @@ async function get(id) {
 
   if (user !== null) {
     user._id = user._id.toString();
-    try{
-      user.cart = user.cart.map((id) => id.toString());
-    }catch(err) {
-      user.cart = user.cart
-    }
-    
+    user.cart = user.cart.map((id) => id.toString());
   }
 
   return user;
@@ -26,17 +21,13 @@ async function get(id) {
 
 async function getByEmail(email) {
   if (typeof email !== 'string') throw `email must be a string but ${typeof email} provided`;
-  
+
   const usersCollection = await users();
   let user = await usersCollection.findOne({ email: email });
 
   if (user !== null) {
     user._id = user._id.toString();
-    try{
-      user.cart = user.cart.map((id) => id.toString());
-    }catch(err) {
-      user.cart = user.cart
-    }
+    user.cart = user.cart.map((id) => id.toString());
   }
 
   return user;
@@ -55,12 +46,18 @@ async function create(user_data) {
   const insertInfo = await usersCollection.insertOne(user);
   if (insertInfo.insertedCount === 0) throw 'Could not add new user';
 
-  return insertInfo.ops[0];
+  const new_user = insertInfo.ops[0];
+  new_user._id = new_user._id.toString();
+  new_user.cart = new_user.cart.map((id) => id.toString());
+  return new_user;
 }
 
 async function addToCart(id, productid) {
+  if (typeof id !== 'string') throw `id must be a string but ${typeof id} provided`;
+  if (typeof productid !== 'string') throw `productid must be a string but ${typeof productid} provided`;
+
   const usersCollection = await users();
-  const updateInfo = usersCollection.updateOne({ _id: id }, { $push: { cart: ObjectId(productid) } });
+  const updateInfo = usersCollection.updateOne({ _id: ObjectId(id) }, { $push: { cart: ObjectId(productid) } });
 
   if (updateInfo.modifiedCount === 0) {
     throw `Could not update user with id ${id}`;
@@ -68,6 +65,8 @@ async function addToCart(id, productid) {
 }
 
 async function getCart(id) {
+  if (typeof id !== 'string') throw `id must be a string but ${typeof id} provided`;
+
   const user = this.get(id);
   if (user === null) throw `no user with ${id} found`;
 
@@ -76,6 +75,8 @@ async function getCart(id) {
 }
 
 async function remove(id) {
+  if (typeof id !== 'string') throw `id must be a string but ${typeof id} provided`;
+
   const usersCollection = await users();
   const deletionInfo = await usersCollection.removeOne({ _id: ObjectId(id) });
 
