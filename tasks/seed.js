@@ -5,7 +5,6 @@ const products = mongoCollections.products;
 const reviews = mongoCollections.reviews;
 const orders = mongoCollections.orders;
 const data = require("../data");
-const { ObjectId } = require('mongodb');
 // #MARK:- Data construction operations, does *not* do validation, that is handled in data functions
 
 const isNonBlankString = (string) => {
@@ -57,6 +56,7 @@ const createUser = (email, firstName, lastName, isAdmin, password, address, cart
         lastName: lastName,
         admin: isAdmin,
         password: password,
+        confirmPassword: password,
         address: address,
         cart: Array.isArray(cart) ? cart : [cart]
     }
@@ -122,20 +122,20 @@ async function seedDB() {
         const mongoBikeIds = Object.keys(mongoBikeIdsMap);
 
         // Address are only US addresses as zip code is an int
-        const bikeShopAddress = createAddress("600 Bike Shop Road", "United States", "Hoboken", 07030);
+        const bikeShopAddress = createAddress("600 Bike Shop Road", "United States", "Hoboken", '07030');
         const addresses = [
-            createAddress("123 Fake Street", "United States", "AnyTown", 01234),
-            createAddress("1 Castle Point Terrace", "United States", "Hoboken", 07030),
-            createAddress("350 Oak Avenue", "United States", "SomeTown", 55555)
+            createAddress("123 Fake Street", "United States", "AnyTown", '01234'),
+            createAddress("1 Castle Point Terrace", "United States", "Hoboken", '07030'),
+            createAddress("350 Oak Avenue", "United States", "SomeTown", '55555')
         ];
 
         const bikeShopEmail = "bikeShop.com";
         const userData = [
-            createUser(`owner@${bikeShopEmail}`, "John", "Smith", true, "2409e5123615094ba274e0f0a87cf69df178fac2aa574b77a5360019e5b466e1", bikeShopAddress, []),
-            createUser(`frontDesk@${bikeShopEmail}`, "Johnny", "Smith", true, "496259b009d76112545ac62b77424b3ae8478862a26e09c0409860e6437f820f", bikeShopAddress, [] ),
-            createUser('bikeBuyer@gmail.com', "Bob", "Wilson", false, "4836bb7bd2171483f95423b51701f79ae26e25d9ccb52e6bb3cd324e04bb35b2", addresses[0], mongoBikeIds),
-            createUser('onlyTheBest@yahoo.com', "Jessica", "Miller", false, "2e3ae0b394ce329349491cef54ee7533ffd9a1630a51c988f84d441b0a02b4e8", addresses[2], mongoBikeIdsMap[0]),
-            createUser("attila@stevens.edu", "Attila", "The Duck", false, "c8553a39235a2c31e1260839207537deef67b0e091764156bca5d5ae51e54ebd", addresses[1], [])
+            createUser(`owner@${bikeShopEmail}`, "John", "Smith", true, "secure_password", bikeShopAddress, []),
+            createUser(`frontDesk@${bikeShopEmail}`, "Johnny", "Smith", true, "helloworld!", bikeShopAddress, [] ),
+            createUser('bikeBuyer@gmail.com', "Bob", "Wilson", false, "familymemberbirthday", addresses[0], mongoBikeIds),
+            createUser('onlyTheBest@yahoo.com', "Jessica", "Miller", false, "very_secure_password", addresses[2], mongoBikeIdsMap[0]),
+            createUser("attila@stevens.edu", "Attila", "The Duck", false, "ImOutOfCreativity", addresses[1], [])
         ];
 
         const userIdsMap = {};
@@ -155,7 +155,7 @@ async function seedDB() {
         for(const userId of userIds){
             //let product1 = await data.products.getbyName('A bike')
             let product2 = await data.products.getbyName('Average Bike');
-            let newOrder = createOrder([product2._id], ObjectId(userId), '7/31/2021',121);
+            let newOrder = createOrder([product2._id], userId, '7/31/2021',121);
             const {_id} = await data.orders.create(newOrder);
             orderIdsMap[_id] = newOrder;
         }
@@ -165,7 +165,7 @@ async function seedDB() {
         //adding Reviews
         const reviewIdsMap = {};
         for(const orderId of orderIds){
-            let order = await data.orders.get(ObjectId(orderId));
+            let order = await data.orders.get(orderId);
             let newReview = createReview(order.owner, order.items[0], true, 3, "Average Bike with average price", "raw code for png");
             const {_id} = await data.reviews.create(newReview);
             reviewIdsMap[_id] = newReview;
