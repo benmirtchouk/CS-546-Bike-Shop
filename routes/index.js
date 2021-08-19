@@ -1,10 +1,13 @@
 const userRoutes = require("./user");
 const productRoutes = require("./products");
 const products = require("../data").products;
+const ordersRoutes = require("./orders")
 
 const constructorMethod = (app) => {
   app.use('/user', userRoutes);
   app.use('/bikes', productRoutes);
+  app.use('/orders', ordersRoutes)
+
   app.use('/', async (req, res ) => {
 
     const productList = await products.getAllUpTo(20);

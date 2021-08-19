@@ -83,6 +83,16 @@ async function updateStock(id, latestStock){
   }  
 }
 
+async function getAllInStock(){
+
+  const productsCollection = await products();
+  const productList = await productsCollection.find({stock : {$gt:0}}).toArray();
+
+  productList.map( product => product._id = product._id.toString())
+
+  return productList;
+}
+
 module.exports = {
   get,
   getBySlug,
@@ -91,5 +101,6 @@ module.exports = {
   update,
   remove,
   getbyName,
-  updateStock
+  updateStock,
+  getAllInStock
 };
