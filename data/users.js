@@ -23,13 +23,7 @@ async function getByEmail(email) {
   if (typeof email !== 'string') throw `email must be a string but ${typeof email} provided`;
 
   const usersCollection = await users();
-  let user = await usersCollection.findOne({ email: email.toLowerCase() });
-
-  if (user !== null) {
-    user._id = user._id.toString();
-    user.cart = user.cart.map((id) => id.toString());
-  }
-
+  let user = await usersCollection.findOne({ email: email });
   return user;
 }
 
@@ -92,5 +86,6 @@ module.exports = {
   create,
   addToCart,
   getCart,
-  remove
+  remove,
+  getByEmail
 };

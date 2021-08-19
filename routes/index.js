@@ -1,11 +1,12 @@
-const mongoCollections = require("../config/mongoCollections");
-const userRoutes = require("./user")
+const userRoutes = require("./user");
+const productRoutes = require("./products");
 const products = require("../data").products;
-
+const ordersRoutes = require("./orders")
 
 const constructorMethod = (app) => {
-
   app.use('/user', userRoutes);
+  app.use('/bikes', productRoutes);
+  app.use('/orders', ordersRoutes)
 
   app.get('/', async (req, res ) => {
 
@@ -30,8 +31,6 @@ const constructorMethod = (app) => {
     
     res.render("homepage", handlebarData);
   })
-
-
   app.use('*', (req, res) => {
     res.status(404).send();
   });

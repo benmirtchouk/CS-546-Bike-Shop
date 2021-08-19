@@ -4,6 +4,7 @@ const users = mongoCollections.users;
 const products = mongoCollections.products;
 const reviews = mongoCollections.reviews;
 const orders = mongoCollections.orders;
+const slugify = require('slugify');
 const data = require("../data");
 // #MARK:- Data construction operations, does *not* do validation, that is handled in data functions
 
@@ -30,6 +31,7 @@ const createSpecs = (length, width, height, frame, fork, shock, tire, shifter, c
 const createProduct = (name, description, tags, stock, pictures, price, specs ) => {
     return {
         name: name,
+        slug: slugify(name, {lower: true}),
         description: description,
         tags: tags,
         stock: stock,

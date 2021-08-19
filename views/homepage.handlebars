@@ -2,7 +2,7 @@
 <h1>Product Offerings</h1> 
 <div class="products">
 {{#each bikes}}
-    <div class="productCard">
+    <a class="productCard" href="/bikes/{{slug}}">
         <div> Name: {{name}} </div>
         <div class="productSubtitle">
             {{#if isLowStock }}
@@ -14,7 +14,7 @@
         </div>
         <p>Description: {{description}}</p>
         <span>Specs: Coming soon!</span>
-    </div>
+    </a>
 {{/each}}
 </div>
 {{/if}}
