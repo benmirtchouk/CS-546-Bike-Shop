@@ -17,6 +17,8 @@ router.post("/register", async (req, res) => {
       if (existing !== null) {
         res.json({error: "An account with this email already exists."});
       } else {
+        // Ensure a user cannot inject themselves as an admin
+        new_user.admin = false
         let user = await usersData.create(new_user);
         req.session.user = user;
         res.json({ user });    
