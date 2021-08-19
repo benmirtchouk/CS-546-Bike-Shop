@@ -32,7 +32,7 @@ async function create(user_data) {
   if (error) throw error.details.map(x => x.message).join(', ');
 
   user.cart = [];
-  user.admin = false;
+  user.admin =  user_data.admin;
   delete user.confirmPassword;
   user.password = await bcrypt.hash(user.password, 10);
   user.email = user.email.toLowerCase()
