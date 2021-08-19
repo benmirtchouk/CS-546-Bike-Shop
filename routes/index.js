@@ -8,13 +8,13 @@ const constructorMethod = (app) => {
   app.use('/bikes', productRoutes);
   app.use('/orders', ordersRoutes)
 
-  app.use('/', async (req, res ) => {
+  app.get('/', async (req, res ) => {
 
     const productList = await products.getAllUpTo(20);
 
     // Map the model data to what handlebars can use
     productList.map(product => {
-      product.isLowStock = product.stock < 5
+      product.isLowStock = product.stock < 5;
       product.price = product.price.toFixed(2);
     });
 
@@ -25,10 +25,11 @@ const constructorMethod = (app) => {
       page: {
         title: "Bike Shop"
       },
-      bikes: productList
-      
-    }
-    res.render("layouts/homepage", handlebarData)
+      bikes: productList,
+      user: req.session.user
+    };
+    
+    res.render("homepage", handlebarData);
   })
   app.use('*', (req, res) => {
     res.status(404).send();

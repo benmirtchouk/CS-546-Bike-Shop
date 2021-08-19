@@ -137,3 +137,12 @@ header {
 .tabCollection .tab:checked ~ .tabContent {
     display: block;
 }
+
+#auth-header div {
+    display: flex;
+    align-items: center;
+}
+
+#auth-header div > * {
+    margin-left: 10px;
+}
