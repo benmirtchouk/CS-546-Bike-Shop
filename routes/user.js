@@ -37,7 +37,7 @@ router.post("/login", async (req, res) => {
     if (typeof req.body.email !== 'string') return res.json({error: `Email must be a string but ${typeof req.body.email} provided`});
     if (typeof req.body.password !== 'string') return res.json({error: `Password must be a string but ${typeof req.body.password} provided`});
 
-    let user = await usersData.getByEmail(req.body.email);
+    let user = await usersData.getByEmail(req.body.email.toLowerCase());
     if (user === null) {
       return res.json({error: 'Invalid email or password provided'});
     }

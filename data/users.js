@@ -23,7 +23,7 @@ async function getByEmail(email) {
   if (typeof email !== 'string') throw `email must be a string but ${typeof email} provided`;
 
   const usersCollection = await users();
-  let user = await usersCollection.findOne({ email: email });
+  let user = await usersCollection.findOne({ email: email.toLowerCase() });
 
   if (user !== null) {
     user._id = user._id.toString();
@@ -41,6 +41,7 @@ async function create(user_data) {
   user.admin = false;
   delete user.confirmPassword;
   user.password = await bcrypt.hash(user.password, 10);
+  user.email = user.email.toLowerCase()
 
   const usersCollection = await users();
   const insertInfo = await usersCollection.insertOne(user);
