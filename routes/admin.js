@@ -33,7 +33,8 @@ router.get("/", async (req, res) => {
 
     const handlebarData = {
         header: {
-            title: `Admin Panel`
+            title: `Admin Panel`,
+            suppressAdminLink: true
           },
           page: {
             title: "Bike Shop Management"
