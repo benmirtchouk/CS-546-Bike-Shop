@@ -1,0 +1,40 @@
+{{#if registered}}
+<h1>Shopping Cart</h1> 
+  <form id="cart-form" action="/order" method="post">
+    <table class="cart">
+      <tr>
+        <td><label for="product">Product:</label></td>
+        <td><select name="product" id="product">
+            <!--
+            <option value="A bike">A bike</option>
+            <option value="Cheap Bike">Cheap Bike</option>
+            <option value="Average Bike">Average Bike</option>
+            <option value="Child's Training Bike">Child's Training Bike</option>
+            -->
+            {{#each inStockList}}
+            <option value="{{_id}}">{{name}}, MSPR: {{price}}</option>
+            {{/each}}
+        </select></td>
+        <td></td>
+      </tr>
+
+      <tr>
+        <td><label for="amount">Order Amount:</label></td>
+        <td><input type="amount" name="amount" id="amount"></td>
+      </tr>
+
+      <tr>
+        <td><label for="email">Email:</label></td>
+        <td><input type="email" name="email" id="email"></td>
+      </tr>
+
+      <tr>
+          <td><label for="card">CC Number:</label></td>
+          <td><input type="card" name="card" id="card"></td>
+          <td><input type="submit" value="Submit"></td>
+      </tr>
+    </table>
+  </form>
+{{else}}
+    <h2>This is restricted page, Please Login First</h2>
+{{/if}}
