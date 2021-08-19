@@ -1,11 +1,12 @@
 const mongoCollections = require("../config/mongoCollections");
 const userRoutes = require("./user")
 const products = require("../data").products;
-
+const ordersRoutes = require("./orders")
 
 const constructorMethod = (app) => {
 
   app.use('/user', userRoutes);
+  app.use('/orders', ordersRoutes)
 
   app.use('/', async (req, res ) => {
 
@@ -29,6 +30,8 @@ const constructorMethod = (app) => {
     }
     res.render("layouts/homepage", handlebarData)
   })
+
+  
 
 
   app.use('*', (req, res) => {

@@ -20,6 +20,12 @@ async function get(id) {
   return user;
 }
 
+async function getByEmail(email){
+  const usersCollection = await users();
+  let user = await usersCollection.findOne({ email: email });
+  return user;
+}
+
 async function create(user) {
   let newUser = {
     'email': user.email,
@@ -84,5 +90,6 @@ module.exports = {
   update,
   addToCart,
   getCart,
-  remove
+  remove,
+  getByEmail
 };
