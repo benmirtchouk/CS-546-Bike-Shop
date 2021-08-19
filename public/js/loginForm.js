@@ -78,7 +78,9 @@ const validateEmailPasswordOrError = (emailField, passwordField) => {
         event.preventDefault();
 
         const inputs = loginForm.elements;
-        validateEmailPasswordOrError(inputs[0], inputs[1]);
+        if (!validateEmailPasswordOrError(inputs[0], inputs[1])) {
+            return false;
+        }
 
         var requestConfig = {
             method: 'POST',
@@ -111,12 +113,14 @@ const validateEmailPasswordOrError = (emailField, passwordField) => {
         const inputs = registerForm.elements;
 
         const passwordField = inputs[1];
-        if(!validateEmailPasswordOrError(inputs[0], passwordField, event)) { return; }
+        if(!validateEmailPasswordOrError(inputs[0], passwordField, event)) {
+            return false;
+        }
         const password = passwordField.value;
         const confirmPassword = inputs[2].value;
         if (password != confirmPassword) {
             alert("Passwords do not match");
-            return;
+            return false;
         }
 
         for ([field, label] of [[inputs[3], "First"], [inputs[4], "Last"]]) {
@@ -124,7 +128,7 @@ const validateEmailPasswordOrError = (emailField, passwordField) => {
             const nameError = errorForName(name);
             if(nameError) {
                 alert(`${label} Name: ${nameError}`)
-                return;
+                return false;
             }
         }
 

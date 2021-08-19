@@ -7,8 +7,12 @@ const users = require("../data").users;
 router.get('/', async function(req, res, next){
     var product_list = await products.getAllInStock()
     var msg = "";
-    let data = {registered:true, inStockList: product_list, errorMessage:msg};//need to verify if logged in as registered user
-    res.render('layouts/order', data)
+    let data = {
+        inStockList: product_list, 
+        errorMessage: msg,
+        user: req.session.user
+    }; //need to verify if logged in as registered user
+    res.render('layouts/order', data);
 })
 
 router.post('/', async function(req, res){
@@ -29,16 +33,20 @@ router.post('/', async function(req, res){
     try{
         const _ = orders.create(orderDetail)
         var product_list = await products.getAllInStock()
-        let data = {registered:true, inStockList: product_list, errorMessage:msg};//need to verify if logged in as registered user
+        let data = {
+            inStockList: product_list, 
+            errorMessage: msg,
+            user: req.session.user
+        }; //need to verify if logged in as registered user
         res.render('layouts/order', data)
     }catch(e){
         msg = "Failed to submit order, please check stock number and email"
-        res.render('layouts/orderError',{errorMessage:msg})
+        res.render('layouts/orderError',{errorMessage: msg, user: req.session.user})
     }
     
     if(!_){
         msg = "Failed to submit order, please check stock number and email"
-        res.render('layouts/orderError',{errorMessage:msg})        
+        res.render('layouts/orderError',{errorMessage: msg, user: req.session.user})        
     }
 
 })
