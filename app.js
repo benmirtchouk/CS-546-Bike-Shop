@@ -5,6 +5,7 @@ const static = express.static('public');
 
 const configRoutes = require('./routes');
 const exphbs = require('express-handlebars');
+const authHelpers = require('./middleware/authentication')
 
 app.use(static);
 app.use(express.json());
@@ -21,6 +22,8 @@ app.use(
     resave: false,
   })
 );
+
+app.use('/admin', authHelpers.requireAdministratorOrEndRequest);
 
 configRoutes(app);
 
