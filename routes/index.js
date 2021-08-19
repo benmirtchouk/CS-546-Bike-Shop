@@ -1,6 +1,5 @@
 
 const userRoutes = require("./user");
-const userRoutes = require("./user")
 const productRoutes = require("./products");
 const adminRoutes = require("./admin");
 const products = require("../data").products;
