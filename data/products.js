@@ -13,6 +13,17 @@ async function get(id) {
   return product;
 }
 
+async function getBySlug(slug) {
+  const productsCollection = await products();
+  const product = await productsCollection.findOne({ slug: slug });
+
+  if (product !== null) {
+    product._id = product._id.toString();
+  }
+
+  return product;
+}
+
 async function create(product) {
   const productsCollection = await products();
   const insertInfo = await productsCollection.insertOne(product);
@@ -84,6 +95,7 @@ async function getAllInStock(){
 
 module.exports = {
   get,
+  getBySlug,
   getAllUpTo,
   create,
   update,
