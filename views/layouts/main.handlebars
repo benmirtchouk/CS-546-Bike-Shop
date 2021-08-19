@@ -13,8 +13,15 @@
       <div id="auth-header">
         {{#if user}}
           <div>
-            <p>{{user.firstName}}</p>
-            <p>{{user.lastName}}</p>
+            <p>{{user.firstName}} {{user.lastName}}</p>
+            {{#if user.admin}}
+            {{#if header.suppressAdminLink}}
+              <a href="/">Homepage</a>
+            {{else}}
+              <a href="/admin">Admin Panel</a>
+            {{/if}}
+            
+            {{/if}}
             <a href="/user/logout">Log Out</a>
           </div>
         {{/if}}
