@@ -1,6 +1,6 @@
 {{#if registered}}
 <h1>Shopping Cart</h1> 
-  <form id="cart-form" action="/order" method="post">
+  <form id="cart-form" action="/orders" method="post">
     <table class="cart">
       <tr>
         <td><label for="product">Product:</label></td>
@@ -40,6 +40,7 @@
       <a type="value" name="subtotal" id="subtotal"></a>
 
   </label>
+  <p>{{errorMessage}}</p>
   <script
   src="https://code.jquery.com/jquery-3.5.1.js"
   integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
