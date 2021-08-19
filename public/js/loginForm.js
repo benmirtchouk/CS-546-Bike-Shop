@@ -97,7 +97,8 @@ const validateEmailPasswordOrError = (emailField, passwordField) => {
                 alert(res.error);
             } else {
                 $("#unauth-header").hide()
-                $("#auth-header").html(`<div><p>${res.user.firstName}</p><p>${res.user.lastName}</p><a href="/user/logout">Log Out</a></div>`)
+                const portalLink = res.user.admin ? `<a href="/admin"> Admin Portal </a>` : "";
+                $("#auth-header").html(`<div><p>${res.user.firstName}</p><p>${res.user.lastName}</p>${portalLink}<a href="/user/logout">Log Out</a></div>`)
                 $("#auth-header").show()
             }
         });
