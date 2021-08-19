@@ -3,6 +3,7 @@ const router = express.Router();
 const products = require("../data").products;
 const orders = require("../data").orders;
 const authHelper = require("../middleware/authentication");
+const handlebarHelper = require("../middleware/handlebarsData");
 
 
 router.get("/", async (req, res) => {
@@ -31,7 +32,7 @@ router.get("/", async (req, res) => {
                         .sort( (a, b) => {return a.revenue + b.revenue })
                         .slice(0, 3);
 
-    const handlebarData = {
+    const additionalHandlebarData = {
         header: {
             title: `Admin Panel`,
             suppressAdminLink: true
@@ -46,8 +47,9 @@ router.get("/", async (req, res) => {
           metrics: {}, 
           products: productList,
           topSellers: topSellers
-
     }
+
+    const handlebarData = handlebarHelper.mergeHandleBarObjects(req.baseHandlebarData, additionalHandlebarData);
 
     res.render('layouts/admin', handlebarData);
 });
