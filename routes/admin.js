@@ -2,23 +2,15 @@ const express = require('express');
 const router = express.Router();
 const products = require("../data").products;
 const orders = require("../data").orders;
+const authHelper = require("../middleware/authentication");
 
 
 router.get("/", async (req, res) => {
 
-    // STUB: User assumed signed in and is admin
-    // STUB: Log in user is hardcoded
-    const user = {
-        email: "owner@bikeShop.com",
-        firstName: "John",
-        lastName: "Smith",
-        address: {
-            address: "600 Bike Shop Road",
-            country: "United States",
-            city: "Hoboken",
-            zipcode: "03608"
-        },
-        cart: []
+    const user = authHelper.getUserIfAdmin(req);
+    if(!user) {
+        authHelper.endRequestDueToBeingUnauthorized(res);
+        return;
     }
 
     const productList = await products.getAllUpTo(20);
