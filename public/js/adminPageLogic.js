@@ -1,14 +1,16 @@
 ( () => {
 
     for(const button of document.getElementsByClassName('productEditButton')) {
-        button.onclick =  () => {
+        button.onclick =  (event) => {
             alert("STUB: Will redirect to product page");
+            event.preventDefault();
         }
     }
 
     for(const button of document.getElementsByClassName('productRemoveButton')) {
-        button.onclick =  () => {
+        button.onclick =  (event) => {
             alert("STUB: Will send delete to server");
+            event.preventDefault();
         }
     }
 
