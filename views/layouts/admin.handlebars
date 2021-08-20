@@ -22,7 +22,7 @@
     <h2>All Products</h2> 
 {{#each products}}
 
-<div class="productCard scrollToProductCard"  data-id="{{_id}}">
+<a class="productCard scrollToProductCard"  data-id="{{_id}}" href="bikes/{{slug}}">
         <div> Name: {{name}} </div>
         <div class="productSubtitle">
             <span >Stock: {{stock}}</span>
@@ -32,7 +32,7 @@
             </span>
         </div>
 
-</div>
+</a>
 
 {{/each}}
 </div>
