@@ -19,8 +19,8 @@ const createSpecs = (length, width, height, frame, fork, shock, tire, shifter, c
         height, height
     }
     // Optional elements. Filter to ensure the keys aren't blank as those are not semantically valid
-    const values = [("frame", frame), ("fork", fork), ("shock", shock), ("tire", tire), ("shifter", shifter), ("chain", chain)];
-    for(let {key, value} in values) {
+    const values = [["frame", frame], ["fork", fork], ["shock", shock], ["tire", tire], ["shifter", shifter], ["chain", chain]];
+    for(const [key, value] of values) {
         if(!isNonBlankString(value)) { continue; }
         specs[key] = value;
     }
