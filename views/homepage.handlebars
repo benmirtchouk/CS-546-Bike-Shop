@@ -13,7 +13,37 @@
             <span class="price">Price: ${{price}}</span>
         </div>
         <p>Description: {{description}}</p>
-        <span>Specs: Coming soon!</span>
+        <span> 
+            Specs:
+            {{#if specs.length}}
+            Length: {{specs.length}} 
+            {{/if}}
+            {{#if specs.width}}
+            Width: {{specs.width}} 
+            {{/if}}
+            {{#if specs.height}}
+            Height: {{specs.height}} 
+            {{/if}}
+            {{#if specs.frame}}
+            Frame: {{specs.frame}}
+            {{/if}}
+            {{#if specs.fork}}
+            Fork: {{specs.fork}}
+            {{/if}}
+            {{#if specs.shock}}
+            Shock: {{specs.shock}} 
+            {{/if}}
+            {{#if specs.tire}}
+            Tire: {{specs.tire}}
+            {{/if}}
+            {{#if specs.shifter}}
+            Shifter: {{specs.shifter}}
+            {{/if}}
+            {{#if specs.chain}}
+            Chain: {{specs.chain}} 
+            {{/if}}
+
+        </span>
     </a>
 {{/each}}
 </div>
