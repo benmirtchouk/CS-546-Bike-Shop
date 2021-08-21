@@ -201,6 +201,12 @@ async function seedDB() {
 
         console.log("Page views seeded");
 
+        for (let i = 0; i < 20; i++) {
+            await data.metrics.notifyLandingPageView();
+        }
+
+        console.log("Landing page metrics seeded")
+
         console.log("Seeding DB completed!");
         const db = await mongoConnection();
         await db.serverConfig.close();

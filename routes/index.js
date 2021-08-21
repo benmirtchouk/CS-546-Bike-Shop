@@ -2,8 +2,11 @@
 const userRoutes = require("./user");
 const productRoutes = require("./products");
 const adminRoutes = require("./admin");
-const products = require("../data").products;
+const data = require("../data");
+const products = data.products;
+const metrics = data.metrics;
 const ordersRoutes = require("./orders")
+
 
 const constructorMethod = (app) => {
   app.use('/user', userRoutes);
@@ -13,6 +16,7 @@ const constructorMethod = (app) => {
   app.use('/admin', adminRoutes);
 
   app.get('/', async (req, res ) => {
+    metrics.notifyLandingPageView();
 
     const productList = await products.getAllUpTo(20);
 
