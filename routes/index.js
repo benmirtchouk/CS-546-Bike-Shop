@@ -37,7 +37,7 @@ const constructorMethod = (app) => {
       user: req.session.user
     };
     
-    res.render("homepage", handlebarData);
+    res.render("pages/homepage", handlebarData);
   })
   app.use('*', (req, res) => {
     res.status(404).send();

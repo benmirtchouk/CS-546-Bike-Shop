@@ -12,7 +12,7 @@ router.get('/', async function(req, res, next){
         errorMessage: msg,
         user: req.session.user
     }; //need to verify if logged in as registered user
-    res.render('layouts/order', data);
+    res.render('pages/order', data);
 })
 
 router.post('/', async function(req, res){
@@ -38,15 +38,15 @@ router.post('/', async function(req, res){
             errorMessage: msg,
             user: req.session.user
         }; //need to verify if logged in as registered user
-        res.render('layouts/order', data)
+        res.render('pages/order', data)
     }catch(e){
         msg = "Failed to submit order, please check stock number and email"
-        res.render('layouts/orderError',{errorMessage: msg, user: req.session.user})
+        res.render('pages/orderError',{errorMessage: msg, user: req.session.user})
     }
     
     if(!_){
         msg = "Failed to submit order, please check stock number and email"
-        res.render('layouts/orderError',{errorMessage: msg, user: req.session.user})        
+        res.render('pages/orderError',{errorMessage: msg, user: req.session.user})        
     }
 
 })
