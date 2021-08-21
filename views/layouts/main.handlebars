@@ -9,56 +9,77 @@
   <body>
     <header>
       {{header.title}}
-      <button class = "tabDropDown">Log in or Register </button>
-      <div class="tabCollection gone">
-        <div>
-            <input type="radio" name="loginRegistration" class="tab" id="loginTab" checked />
-            <label for="loginTab" >Log in</label>
-            <div class="tabContent">
-              <form method="POST" action="user/login" id="loginForm">
-                <label>
-                  Email:
-                  <input type="email" name="email" required/>
-                </label>
-                  <label>
-                  Password:
-                  <input type="password" name="password" required/>
-                </label>
-                <button type="submit">Log In!</button>
-              </form>
-            </div>
-        </div>
 
-        <div>
-            <input type="radio" name="loginRegistration" class="tab" id="registerTab" />
-            <label for="registerTab">Register</label>
-            <div class="tabContent">
-              <form method="POST" action="user/register" id="registerForm">
-                <label>
-                  Email:
-                  <input type="email" name="email" required />
-                </label>
-                  <label>
-                  Password:
-                  <input type="password" name="password" required/>
-                </label>
-                <label>
-                  Confirm Password:
-                  <input type="password" name="passwordConfirm" required/>
-                </label>
-                  <label>
-                  First Name:
-                  <input type="text" name="firstName" required/>
-                </label>
-                <label>
-                  Last Name:
-                  <input type="text" name="lastName" required/>
-                </label>
-                <button type="submit">Register!</button>
-              </form>
+      <div id="auth-header">
+        {{#if user}}
+          <div>
+            <p>{{user.firstName}} {{user.lastName}}</p>
+            {{#if user.admin}}
+            {{#if header.suppressAdminLink}}
+              <a href="/">Homepage</a>
+            {{else}}
+              <a href="/admin">Admin Panel</a>
+            {{/if}}
+            
+            {{/if}}
+            <a href="/user/logout">Log Out</a>
+          </div>
+        {{/if}}
+      </div>
+      {{#unless user}}
+        <div id="unauth-header">
+          <button class = "tabDropDown">Log in or Register</button>
+          <div class="tabCollection gone">
+            <div>
+                <input type="radio" name="loginRegistration" class="tab" id="loginTab" checked />
+                <label for="loginTab" >Log in</label>
+                <div class="tabContent">
+                  <form method="POST" action="user/login" id="loginForm">
+                    <label>
+                      Email: 
+                      <input type="email" name="email" required/>
+                    </label>
+                      <label>
+                      Password: 
+                      <input type="password" name="password" required/>
+                    </label>
+                    <button type="submit">Log In!</button>
+                  </form>
+                </div>
+            </div>
+          
+            <div>
+                <input type="radio" name="loginRegistration" class="tab" id="registerTab" />
+                <label for="registerTab">Register</label>
+                <div class="tabContent">
+                  <form method="POST" action="user/register" id="registerForm">
+                    <label>
+                      Email: 
+                      <input type="email" name="email" required />
+                    </label>
+                      <label>
+                      Password: 
+                      <input type="password" name="password" required/>
+                    </label>
+                    <label>
+                      Confirm Password: 
+                      <input type="password" name="passwordConfirm" required/>
+                    </label>
+                      <label>
+                      First Name: 
+                      <input type="text" name="firstName" required/>
+                    </label>
+                    <label>
+                      Last Name: 
+                      <input type="text" name="lastName" required/>
+                    </label>
+                    <button type="submit">Register!</button>
+                  </form>
+                </div>
             </div>
         </div>
-    </div>
+      </div>
+    {{/unless}}
     </header>
     <div id="pageContent">
       {{{body}}}
@@ -66,10 +87,18 @@
     {{#if footer}}
     <footer>
       {{footer.text}}
+      {{#if footer.linkHome}}
+      <a href="/">Homepage</a>
+      {{/if}}
     </footer>
     {{/if}}
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj" crossorigin="anonymous"></script>
+    <script
+      src="https://code.jquery.com/jquery-3.5.1.js"
+      integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
+      crossorigin="anonymous"></script>
     <script src="/js/loginForm.js"></script>
+    <script src="/js/orderTotal.js"></script>
     <script src="/js/price.js"></script>
   </body>
 </html>
