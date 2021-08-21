@@ -3,6 +3,7 @@
   <head>
     <meta charset="utf-8">
     <title>{{page.title}}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
     <link rel="stylesheet" href="/css/site.css">
   </head>
   <body>
@@ -16,41 +17,41 @@
             <div class="tabContent">
               <form method="POST" action="user/login" id="loginForm">
                 <label>
-                  Email: 
+                  Email:
                   <input type="email" name="email" required/>
                 </label>
                   <label>
-                  Password: 
+                  Password:
                   <input type="password" name="password" required/>
                 </label>
                 <button type="submit">Log In!</button>
               </form>
             </div>
         </div>
-      
+
         <div>
             <input type="radio" name="loginRegistration" class="tab" id="registerTab" />
             <label for="registerTab">Register</label>
             <div class="tabContent">
               <form method="POST" action="user/register" id="registerForm">
                 <label>
-                  Email: 
+                  Email:
                   <input type="email" name="email" required />
                 </label>
                   <label>
-                  Password: 
+                  Password:
                   <input type="password" name="password" required/>
                 </label>
                 <label>
-                  Confirm Password: 
+                  Confirm Password:
                   <input type="password" name="passwordConfirm" required/>
                 </label>
                   <label>
-                  First Name: 
+                  First Name:
                   <input type="text" name="firstName" required/>
                 </label>
                 <label>
-                  Last Name: 
+                  Last Name:
                   <input type="text" name="lastName" required/>
                 </label>
                 <button type="submit">Register!</button>
@@ -67,6 +68,8 @@
       {{footer.text}}
     </footer>
     {{/if}}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-U1DAWAznBHeqEIlVSCgzq+c9gqGAJn5c/t99JyeKa9xxaYpSvHU5awsuZVVFIhvj" crossorigin="anonymous"></script>
     <script src="/js/loginForm.js"></script>
+    <script src="/js/price.js"></script>
   </body>
 </html>
