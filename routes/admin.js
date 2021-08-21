@@ -19,7 +19,7 @@ router.get("/", async (req, res) => {
     const productList = await products.getAllUpTo(20);
     const orderList = await orders.aggregateOrders();
     const pageViews = await metrics.getAll();
-    
+    let totalViews = 0
     productList.forEach(product => {
         const orderAmount = orderList[product._id];
         product.orderCount = !!orderAmount ? orderAmount : 0;
@@ -27,7 +27,13 @@ router.get("/", async (req, res) => {
         product.revenue = isNaN(revenue) ? 0 : revenue.toFixed(2);
         product.price = product.price.toFixed(2);
         product.pageViews = pageViews[product._id] ? pageViews[product._id] :0;
+        totalViews += product.pageViews;
       });
+
+      const totalProductViews = totalViews;
+      const landingPageViews = pageViews.landingPage ? pageViews.landingPage : 0; 
+
+      totalViews += landingPageViews;
 
       // Grab the top sellers, by revenue, and sort in descending order for handlebars
       const topSellers = productList
@@ -47,7 +53,11 @@ router.get("/", async (req, res) => {
               linkHome: true
           },
           user: user, 
-          metrics: {}, 
+          metrics: {
+            totalSiteViews: totalViews,
+            landingPageViews: landingPageViews, 
+            totalProductViews: totalProductViews
+          }, 
           products: productList,
           topSellers: topSellers
     }
