@@ -4,8 +4,10 @@ const users = mongoCollections.users;
 const products = mongoCollections.products;
 const reviews = mongoCollections.reviews;
 const orders = mongoCollections.orders;
+const metrics = mongoCollections.metrics;
 const slugify = require('slugify');
 const data = require("../data");
+const { ObjectId } = require("mongodb");
 // #MARK:- Data construction operations, does *not* do validation, that is handled in data functions
 
 const isNonBlankString = (string) => {
@@ -94,7 +96,6 @@ async function seedDB() {
         await reviewCollection.deleteMany({});
         const orderCollection = await orders();
         await orderCollection.deleteMany({});
-
 
         // Create the spec objects, these can be reused between products
         const specs = 
@@ -185,6 +186,20 @@ async function seedDB() {
         }
         console.log("review seeded");
         const reviewIds = Object.keys(reviewIdsMap);
+
+
+        // As other routes report metrics while being populated, clear now so the seed data is consistent.
+        const metricCollection = await metrics();
+        await metricCollection.deleteMany({});
+        const baseViews = mongoBikeIds.length * 3;
+        for(const [i, id] of mongoBikeIds.entries()) {
+            const multiplier = i % 2 == 0 ? 1 : -1;
+            for(let j = 0; j < baseViews + (i * multiplier); j++ ) {
+                await data.metrics.notifyProductPageView(id);
+            }   
+        }
+
+        console.log("Page views seeded");
 
         console.log("Seeding DB completed!");
         const db = await mongoConnection();
