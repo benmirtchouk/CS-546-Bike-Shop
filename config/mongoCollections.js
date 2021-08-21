@@ -24,4 +24,5 @@ module.exports = {
     products: getCollectionFn("products"),
     reviews: getCollectionFn("reviews"),
     orders: getCollectionFn("orders"),
+    metrics: getCollectionFn("metrics"),
 };
