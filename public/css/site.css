@@ -43,18 +43,28 @@ div.pageContent {
     margin-left: 2em;
 }
 
-.productCard {
+.card, .productCard {
     border-width: 2px;
     border-style: solid;
     border-color: #CCC;
     background-color: #CCC;
-    filter: drop-shadow(.5rem 1.5rem 1rem gray);
     margin-bottom: 2em;
     border-radius: 10px;
     display: inline-block;
-    position: relative;
     padding: .2em;
     transition: top ease-in-out 0.5s;
+}
+
+.productCard {
+    position: relative;
+    filter: drop-shadow(.5rem 1.5rem 1rem gray);
+}
+
+.card:not(.productCard ) {
+    display: flex;
+    margin: auto;
+    max-width: 80%;
+    min-width: 55%;
 }
 .products {
     display: flex;
@@ -160,6 +170,9 @@ header {
     margin-left: 10px;
 }
 
+ul.noBullets {
+    list-style-type: none;
+}
 /*
 --------------------------------
 Product Page Styles
