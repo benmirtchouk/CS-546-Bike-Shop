@@ -1,7 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const products = require("../data").products;
-const orders = require("../data").orders;
+const dataModel = require('../data');
+const products = dataModel.products;
+const orders = dataModel.orders;
+const metrics = dataModel.metrics;
 const authHelper = require("../middleware/authentication");
 const handlebarHelper = require("../middleware/handlebarsData");
 
@@ -16,14 +18,15 @@ router.get("/", async (req, res) => {
 
     const productList = await products.getAllUpTo(20);
     const orderList = await orders.aggregateOrders();
-
-
+    const pageViews = await metrics.getAll();
+    
     productList.forEach(product => {
         const orderAmount = orderList[product._id];
         product.orderCount = !!orderAmount ? orderAmount : 0;
         const revenue = orderAmount * product.price;
         product.revenue = isNaN(revenue) ? 0 : revenue.toFixed(2);
         product.price = product.price.toFixed(2);
+        product.pageViews = pageViews[product._id] ? pageViews[product._id] :0;
       });
 
       // Grab the top sellers, by revenue, and sort in descending order for handlebars
