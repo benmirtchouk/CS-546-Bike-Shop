@@ -4,6 +4,7 @@ const orders = mongoCollections.orders;
 const users = require('./users');
 const products = require('./products');
 const new_order_schema = require('../schemas/new_order');
+const mongoOperations = require('./mongoOperations');
 
 async function get(id) {
   if (typeof id !== 'string') throw `id must be a string but ${typeof id} provided`;
@@ -106,8 +107,7 @@ async function aggregateOrders() {
               ])
               .toArray()
   // As toArray does not allow pretty chaining, allow for the await to finish and collect the value before reducing. 
-  // Then reduce the array in form `[{key1: count1}, {key1: count1}]` to an object of form `{key1: count1, key2: count2} to expose a dictionary with constant time look-up
-  return data.reduce( (acc, curr) => ({ ...acc, [curr._id.toString()]:  curr.count}), {})
+  return mongoOperations.resultsToSet(data, "_id", "count");
 }
 
 module.exports = {
