@@ -29,7 +29,9 @@ async function create(product) {
   const insertInfo = await productsCollection.insertOne(product);
   if (insertInfo.insertedCount === 0) throw 'Could not add new product';
 
-  return insertInfo.ops[0];
+  const new_product = insertInfo.ops[0];
+  new_product._id = new_product._id.toString();
+  return new_product;
 }
 
 async function update(id, product) {
@@ -68,7 +70,7 @@ async function getAllUpTo(limit){
   const productsCollection = await products();
   const productList = await productsCollection.find({}).limit(limit).toArray();
 
-  productList.map( product => product._id = product._id.toString())
+  productList.forEach( product => product._id = product._id.toString())
 
   return productList;
 }
@@ -83,6 +85,16 @@ async function updateStock(id, latestStock){
   }  
 }
 
+async function getAllInStock(){
+
+  const productsCollection = await products();
+  const productList = await productsCollection.find({stock : {$gt:0}}).toArray();
+
+  productList.map( product => product._id = product._id.toString())
+
+  return productList;
+}
+
 module.exports = {
   get,
   getBySlug,
@@ -91,5 +103,6 @@ module.exports = {
   update,
   remove,
   getbyName,
-  updateStock
+  updateStock,
+  getAllInStock
 };

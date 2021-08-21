@@ -1,17 +1,24 @@
+
 const userRoutes = require("./user");
 const productRoutes = require("./products");
+const adminRoutes = require("./admin");
 const products = require("../data").products;
+const ordersRoutes = require("./orders")
 
 const constructorMethod = (app) => {
   app.use('/user', userRoutes);
   app.use('/bikes', productRoutes);
-  app.use('/', async (req, res ) => {
+  app.use('/orders', ordersRoutes)
+
+  app.use('/admin', adminRoutes);
+
+  app.get('/', async (req, res ) => {
 
     const productList = await products.getAllUpTo(20);
 
     // Map the model data to what handlebars can use
     productList.map(product => {
-      product.isLowStock = product.stock < 5
+      product.isLowStock = product.stock < 5;
       product.price = product.price.toFixed(2);
     });
 
@@ -22,10 +29,11 @@ const constructorMethod = (app) => {
       page: {
         title: "Bike Shop"
       },
-      bikes: productList
-      
-    }
-    res.render("layouts/homepage", handlebarData)
+      bikes: productList,
+      user: req.session.user
+    };
+    
+    res.render("homepage", handlebarData);
   })
   app.use('*', (req, res) => {
     res.status(404).send();

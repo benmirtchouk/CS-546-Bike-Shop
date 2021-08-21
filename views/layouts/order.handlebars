@@ -1,0 +1,60 @@
+{{#if user}}
+<h1>Shopping Cart</h1> 
+  <form id="cart-form" action="/orders" method="post">
+    <table class="cart">
+      <tr>
+        <td><label for="product">Product:</label></td>
+        <td><select name="product" id="product">
+            <!--
+            <option value="A bike">A bike</option>
+            <option value="Cheap Bike">Cheap Bike</option>
+            <option value="Average Bike">Average Bike</option>
+            <option value="Child's Training Bike">Child's Training Bike</option>
+            -->
+            {{#each inStockList}}
+            <option id = "selectedProd" value="{{_id}}" onchange="getSubTotal()">{{name}}, MSPR: ${{price}}</option>
+            {{/each}}
+        </select></td>
+        <td></td>
+      </tr>
+
+      <tr>
+        <td><label for="amount">Order Amount:</label></td>
+        <td><input type="amount" name="amount" id="amount" onchange="getSubTotal()"></td>
+      </tr>
+
+      <tr>
+        <td><label for="email">Email:</label></td>
+        <td><input type="email" name="email" id="email"></td>
+      </tr>
+
+      <tr>
+          <td><label for="card">CC Number:</label></td>
+          <td><input type="card" name="card" id="card"></td>
+          <td><input type="submit" value="Submit"></td>
+      </tr>
+    </table>
+  </form>
+  <label>
+      <h5>Total :</h5>
+      <a type="value" name="subtotal" id="subtotal"></a>
+
+  </label>
+  <p>{{errorMessage}}</p>
+  <script
+  src="https://code.jquery.com/jquery-3.5.1.js"
+  integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
+  crossorigin="anonymous"></script>
+  <script src="/public/js/orderTotal.js"></script>
+  <script type="text/javascript">
+  $('#amount').change(calcTotal);
+  $('#product').change(calcTotal);
+  function calcTotal(){
+      var e = document.getElementById("product");
+      var prodText = e.options[e.selectedIndex].text;
+      document.getElementById("subtotal").innerHTML = $('#amount').val()*parseFloat(prodText.substring(prodText.indexOf("$")+1,prodText.length))
+  }
+  </script>
+{{else}}
+    <h2>This is restricted page, Please Login First</h2>
+{{/if}}

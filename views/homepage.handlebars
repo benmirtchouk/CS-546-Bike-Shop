@@ -1,0 +1,50 @@
+{{#if bikes}}
+<h1>Product Offerings</h1> 
+<div class="products">
+{{#each bikes}}
+    <a class="productCard" href="/bikes/{{slug}}">
+        <div> Name: {{name}} </div>
+        <div class="productSubtitle">
+            {{#if isLowStock }}
+                <span class="stock lowStock">Only {{stock}} left in stock, order now!</span>
+            {{else}}
+                <span class="stock ">Left in Stock: {{stock}}</span>
+            {{/if}} 
+            <span class="price">Price: ${{price}}</span>
+        </div>
+        <p>Description: {{description}}</p>
+        <span> 
+            Specs:
+            {{#if specs.length}}
+            Length: {{specs.length}} 
+            {{/if}}
+            {{#if specs.width}}
+            Width: {{specs.width}} 
+            {{/if}}
+            {{#if specs.height}}
+            Height: {{specs.height}} 
+            {{/if}}
+            {{#if specs.frame}}
+            Frame: {{specs.frame}}
+            {{/if}}
+            {{#if specs.fork}}
+            Fork: {{specs.fork}}
+            {{/if}}
+            {{#if specs.shock}}
+            Shock: {{specs.shock}} 
+            {{/if}}
+            {{#if specs.tire}}
+            Tire: {{specs.tire}}
+            {{/if}}
+            {{#if specs.shifter}}
+            Shifter: {{specs.shifter}}
+            {{/if}}
+            {{#if specs.chain}}
+            Chain: {{specs.chain}} 
+            {{/if}}
+
+        </span>
+    </a>
+{{/each}}
+</div>
+{{/if}}

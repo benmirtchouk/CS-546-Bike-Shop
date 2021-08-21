@@ -3,8 +3,11 @@ const mongoCollections = require('../config/mongoCollections');
 const orders = mongoCollections.orders;
 const users = require('./users');
 const products = require('./products');
+const new_order_schema = require('../schemas/new_order');
 
 async function get(id) {
+  if (typeof id !== 'string') throw `id must be a string but ${typeof id} provided`;
+
   const ordersCollection = await orders();
   let order = await ordersCollection.findOne({ _id: ObjectId(id) });
 
@@ -17,24 +20,12 @@ async function get(id) {
   return order;
 }
 
-async function create(order) {
+async function create(order_data) {
+  const { error, value: order } = new_order_schema.validate(order_data, {abortEarly: false, allowUnknown: true, stripUnknown: true});
+  if (error) throw error.details.map(x => x.message).join(', ');
+
   const owner = users.get(order.owner);
   if (owner === null) throw `no user with id ${order.owner}`;
-  
-  // order.items.forEach(id => {
-  //   const product = products.get(id);
-  //   if (product === null) {
-  //     throw `no product with id ${id}`;
-  //   }
-  //   else if (product.stock === 0){
-  //     throw `no product left IN STOCK with id ${id}`;
-  //   }
-  //   else{
-  //     //update product's stock
-  //     product.stock = product.stock - 1;
-  //     products.update(id, product)
-  //   }
-  // });
 
   for (const id of order.items){
     const product = await products.get(id);
@@ -49,21 +40,17 @@ async function create(order) {
     else{
       //update product's stock
       let currentStock = product.stock - 1;
-      await products.updateStock(ObjectId(id), currentStock)
+      await products.updateStock(id, currentStock)
     }    
   }
 
-  const newOrder = {
-    'items': order.items.map(id => ObjectId(id)),
-    'owner': ObjectId(order.owner),
-    'datePlaced': order.datePlaced,
-    'updates': [],
-    'status': 'newly created',
-    'price': order.price
-  };
+  order.items = order.items.map(id => ObjectId(id));
+  order.owner = ObjectId(order.owner);
+  order.status = 'newly created';
+  order.updates = [];
 
   const ordersCollection = await orders();
-  const insertInfo = await ordersCollection.insertOne(newOrder);
+  const insertInfo = await ordersCollection.insertOne(order);
   if (insertInfo.insertedCount === 0) throw 'Could not add new order';
 
   let inserted = insertInfo.ops[0];
@@ -74,6 +61,9 @@ async function create(order) {
 }
 
 async function addUpdate(id, update) {
+  if (typeof id !== 'string') throw `id must be a string but ${typeof id} provided`;
+  if (typeof update !== 'string') throw `update must be a string but ${typeof update} provided`;
+
   const ordersCollection = await orders();
   const updateInfo = await ordersCollection.updateOne({ _id: ObjectId(id) }, { $push: {updates: update} });
 
@@ -83,6 +73,9 @@ async function addUpdate(id, update) {
 }
 
 async function updateStatus(id, status) {
+  if (typeof id !== 'string') throw `id must be a string but ${typeof id} provided`;
+  if (typeof status !== 'string') throw `status must be a string but ${typeof status} provided`;
+
   const ordersCollection = await orders();
   const updateInfo = await ordersCollection.updateOne({ _id: ObjectId(id) }, { $set: {status: status} });
 
@@ -92,6 +85,8 @@ async function updateStatus(id, status) {
 }
 
 async function remove(id) {
+  if (typeof id !== 'string') throw `id must be a string but ${typeof id} provided`;
+
   const ordersCollection = await orders();
   const deletionInfo = await ordersCollection.removeOne({ _id: ObjectId(id) });
 
@@ -100,10 +95,26 @@ async function remove(id) {
   }
 }
 
+async function aggregateOrders() {
+
+  const ordersCollection = await orders();
+  // Count all occurrences a product was bought through the DB. Ideally this would be cached in an application at scale. 
+  const data = await ordersCollection.aggregate([
+              {$project: {"_id": false, "items":true}}, 
+              {$unwind: "$items"},  
+              {$group: {_id: '$items', count: { $sum : 1} }}
+              ])
+              .toArray()
+  // As toArray does not allow pretty chaining, allow for the await to finish and collect the value before reducing. 
+  // Then reduce the array in form `[{key1: count1}, {key1: count1}]` to an object of form `{key1: count1, key2: count2} to expose a dictionary with constant time look-up
+  return data.reduce( (acc, curr) => ({ ...acc, [curr._id.toString()]:  curr.count}), {})
+}
+
 module.exports = {
   get,
   create,
   addUpdate,
   updateStatus,
   remove,
+  aggregateOrders
 };

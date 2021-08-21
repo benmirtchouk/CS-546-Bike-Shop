@@ -3,6 +3,11 @@ body {
 
 }
 
+.productCard.scrollTarget {
+    background-color: gold;
+    filter: drop-shadow(.5rem 1.5rem 1rem gold);
+}
+
 .gone {
     display: none;
 }
@@ -51,7 +56,6 @@ div.pageContent {
     padding: .2em;
     transition: top ease-in-out 0.5s;
 }
-
 .products {
     display: flex;
     margin: auto;
@@ -63,6 +67,11 @@ div.pageContent {
 
 .productCard:hover {
     background-color: #BBB;
+    top: -0.5em;
+}
+
+.scrollTarget.productCard:hover{
+    background-color: #eec600;
     top: -0.5em;
 }
 
@@ -140,6 +149,15 @@ header {
 
 .tabCollection .tab:checked ~ .tabContent {
     display: block;
+}
+
+#auth-header div {
+    display: flex;
+    align-items: center;
+}
+
+#auth-header div > * {
+    margin-left: 10px;
 }
 
 /*
