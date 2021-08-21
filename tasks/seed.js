@@ -106,11 +106,10 @@ async function seedDB() {
 
         const productsData = 
         [
-            createProduct("A bike", "The best bike", ["Fast", "Colorful"], 4, [], 3000.15, specs[2]),
-            createProduct("Cheap Bike", "The cheapest bike money can buy", ["Slow", "Rusted", "No Kickstand"], 10, [], 100.20, specs[0]),
-            createProduct("Average Bike", "A normal street bike", ["Street"], 20, [], 150.60, specs[1]),
-            createProduct("Child's Training Bike", "The perfect training bike!", ["Small", "Child", "Training Wheels"], 5, [], 50.10, specs[0])
-
+            createProduct("A bike", "The best bike", ["Fast", "Colorful"], 3, ["/images/1.jpg", "/images/2.jpg"], 3000.15, specs[2]),
+            createProduct("Cheap Bike", "The cheapest bike money can buy", ["Slow", "Rusted", "No Kickstand"], 10, ["/images/3.jpg"], 100.20, specs[0]),
+            createProduct("Average Bike", "A normal street bike", ["Street"], 20, ["/images/4.jpg", "/images/5.jpg"], 150.60, specs[1]),
+            createProduct("Child's Training Bike", "The perfect training bike!", ["Small", "Child", "Training Wheels"], 5, ["/images/6.jpg", "/images/7.jpg", "/images/8.jpg"], 50.10, specs[0])
         ];
         
         // This is a map of the string id -> the inserted bike object. 
@@ -154,7 +153,7 @@ async function seedDB() {
         const userIds = Object.keys(userIdsMap);
 
         //adding Orders
-        
+
         // Define the bikes the users have bought
         bikeOrderMap = {}
         bikeOrderMap[userIds[0]] = [mongoBikeIds[0]];
