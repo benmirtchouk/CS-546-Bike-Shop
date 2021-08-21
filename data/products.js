@@ -1,6 +1,7 @@
 const { ObjectId } = require('mongodb');
 const mongoCollections = require('../config/mongoCollections');
 const products = mongoCollections.products;
+const metrics = require('./metrics');
 
 async function get(id) {
   const productsCollection = await products();
@@ -8,6 +9,7 @@ async function get(id) {
 
   if (product !== null) {
     product._id = product._id.toString();
+    metrics.notifyProductPageView(product._id);
   }
 
   return product;
@@ -19,6 +21,7 @@ async function getBySlug(slug) {
 
   if (product !== null) {
     product._id = product._id.toString();
+    metrics.notifyProductPageView(product._id);
   }
 
   return product;
