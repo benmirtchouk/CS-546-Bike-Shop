@@ -5,7 +5,10 @@
     <a class="productCard" href="/bikes/{{slug}}">
         <div> Name: {{name}} </div>
         <div class="productSubtitle">
-            {{#if isLowStock }}
+
+            {{#if isOutOfStock}}
+                <span class="stock">Temporarily out of stock </span>
+            {{else if isLowStock }}
                 <span class="stock lowStock">Only {{stock}} left in stock, order now!</span>
             {{else}}
                 <span class="stock ">Left in Stock: {{stock}}</span>
