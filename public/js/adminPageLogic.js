@@ -96,6 +96,7 @@
                                 .trim();
 
             editProductFormText.textContent = `Editing properties for "${editBikeName}". Only enter the fields to be updated.`;  
+            editProductForm.reset();
             editProductForm.parentNode.classList.remove("gone");
         }
     }
