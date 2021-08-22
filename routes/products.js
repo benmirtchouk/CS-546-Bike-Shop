@@ -9,7 +9,8 @@ const authHelper = require("../middleware/authentication");
 
 router.get("/:slug", async (req, res) => {
     const product = await productData.getBySlug(req.params.slug);
-    product.isLowStock = product.stock < 5;
+    product.isOutOfStock = product.stock <= 0;
+    product.isLowStock = product.stock < 5 && !product.isOutOfStock;
     metrics.notifyProductPageView(model._id);
 
     const reviews = await reviewData.getByProductId(product._id);
