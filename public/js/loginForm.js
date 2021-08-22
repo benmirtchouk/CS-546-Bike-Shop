@@ -73,6 +73,10 @@ const validateEmailPasswordOrError = (emailField, passwordField) => {
 
     // #MARK: Tab header forms
     const loginForm = document.getElementById("loginForm");
+    // If the form is not on the DOM, the user was logged in when the server created the page
+    if(!loginForm) {
+        return;
+    }
 
     loginForm.addEventListener('submit', event => {
         event.preventDefault();

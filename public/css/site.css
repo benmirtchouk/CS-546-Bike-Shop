@@ -66,13 +66,30 @@ div.pageContent {
     max-width: 80%;
     min-width: 55%;
 }
-.products {
+
+
+.products, #editProductForm, #editProductFormDiv {
     display: flex;
     margin: auto;
     max-width: 80%;
     min-width: 55%;
     flex-direction: column;
     justify-content: space-evenly;
+}
+
+#editProductFormDiv.gone {
+    display: none;
+}
+
+#editProductForm div {
+    flex-wrap: wrap;
+    justify-content: left;
+}
+
+#editProductForm button {
+    max-width: 5em;
+    min-width: none;
+    display: inline-block;
 }
 
 .productCard:hover {
