@@ -15,6 +15,65 @@
 {{/if}}
 
 <br />
+<div id="editProductFormDiv" class="gone">
+    <span id="editProductFormText"></span>
+    <form id="editProductForm" method="POST" action="/bikes-noop" >
+        <div>
+            <label>
+            Name: <input type="text" name="name"/>
+            </label>
+            <label>
+            Price: <input type="number" name="price" step="0.01" min="1"/>
+            </label>
+            <label>
+            Stock: <input type="number" name="stock" min="0"/>
+            </label>
+            <label>
+            Tags: <textarea name="tags" form="editProductForm" rows="1" placeholder="Include current tags "></textarea>
+            </label>
+        </div>
+
+        <label>
+        Description:
+        <textarea name="description" form="editProductForm" rows="1"></textarea>
+        </label>
+
+        <div>
+            <label>
+            Length: <input type="number" name="specs.length" min="1"/>
+            </label>
+            <label>
+            Width: <input type="number" name="specs.width" min="1"/>
+            </label>
+            <label>
+            Height: <input type="number" name="specs.height" min="1"/>
+            </label>
+            <label>
+            Frame: <input type="text" name="specs.frame"/>
+            </label>
+            <label>
+            Fork: <input type="text" name="specs.fork"/>
+            </label>
+            <label>
+            Shock: <input type="text" name="specs.shock"/>
+            </label>
+            <label>
+            Tire: <input type="text" name="specs.tire"/>
+            </label>
+            <label>
+            Shifter: <input type="text" name="specs.shifter"/>
+            </label>
+            <label>
+            Chain: <input type="text" name="specs.chain"/>
+            </label>
+        </div>
+        <button type="submit">Update!</button>
+
+    </form>
+</div>
+
+
+
 <br />
 
 {{#if products}}
