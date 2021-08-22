@@ -1,14 +1,18 @@
 <div id="reviews">
   {{#each reviews}}
-    <div class="review">
+    <div id="review_{{_id}}" class="review">
       <div class="review-likes">
-        {{#if user}}
-          <button onclick="like('{{user._id}}', '{{_id}}')">▲</button>
+        {{#if ../user}}
+          <button onclick="like('{{_id}}')" class="{{ifinside ../user._id likers 'rating-active' ''}}">▲</button>
         {{else}}
           <button onclick="alert('You must log in to vote')">▲</button>
         {{/if}}
         <p>{{sub likes dislikes}}</p>
-        <button onclick="dislike('{{_id}}')">▼</button>
+        {{#if ../user}}
+          <button onclick="dislike('{{_id}}')" class="{{ifinside ../user._id dislikers 'rating-active' ''}}">▼</button>
+        {{else}}
+          <button onclick="alert('You must log in to vote')">▼</button>
+        {{/if}}
       </div>
 
       <div class="review-body">

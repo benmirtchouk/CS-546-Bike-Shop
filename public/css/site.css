@@ -302,3 +302,7 @@ Product Page Styles
     display: flex;
     justify-content: space-around;
 }
+
+.rating-active {
+    background: #83bcea;
+}
