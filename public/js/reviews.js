@@ -19,7 +19,6 @@ function rate(reviewid, sentiment) {
         rating_elements[2].classList.add('rating-active');
         rating_elements[0].classList.remove('rating-active');
       }
-      console.log('res=',res);
       rating_elements[1].innerText = res.review.likes - res.review.dislikes;
     }
   });

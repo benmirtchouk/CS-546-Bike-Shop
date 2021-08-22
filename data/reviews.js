@@ -128,6 +128,8 @@ async function dislike(userid, reviewid) {
 }
 
 async function remove(id) {
+  if (typeof id !== 'string') throw `id must be a string but ${typeof id} provided`;
+  
   const reviewsCollection = await reviews();
   const deletionInfo = await reviewsCollection.removeOne({ _id: ObjectId(id) });
 
