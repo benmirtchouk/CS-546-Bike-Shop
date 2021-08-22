@@ -1,7 +1,7 @@
 const { ObjectId } = require('mongodb');
 const mongoCollections = require('../config/mongoCollections');
 const products = mongoCollections.products;
-const metrics = require('./metrics');
+const productSchema = require('../schemas/new_product');
 
 async function get(id) {
   const productsCollection = await products();
@@ -9,7 +9,6 @@ async function get(id) {
 
   if (product !== null) {
     product._id = product._id.toString();
-    metrics.notifyProductPageView(product._id);
   }
 
   return product;
@@ -21,13 +20,17 @@ async function getBySlug(slug) {
 
   if (product !== null) {
     product._id = product._id.toString();
-    metrics.notifyProductPageView(product._id);
   }
 
   return product;
 }
 
-async function create(product) {
+async function create(productData) {
+  const { error, value: product } = productSchema.validate(productData);
+  if (error) {
+      throw error
+  }
+  
   const productsCollection = await products();
   const insertInfo = await productsCollection.insertOne(product);
   if (insertInfo.insertedCount === 0) throw 'Could not add new product';
@@ -37,10 +40,13 @@ async function create(product) {
   return new_product;
 }
 
-async function update(id, product) {
+async function update(id, productData) {
+  const { error, value: product } = productSchema.validate(productData);
+  if (error) {
+      throw error
+  }
   const productsCollection = await products();
   const updateInfo = await productsCollection.updateOne({ _id: ObjectId(id) }, { $set: product });
-
   if (updateInfo.modifiedCount === 0) {
     throw `Could not update product with id ${id}`;
   }
