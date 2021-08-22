@@ -5,6 +5,7 @@ const productData = require("../data/products");
 const reviewData = require("../data/reviews");
 const metrics = require("../data/metrics");
 const productSchema = require("../schemas/new_product");
+const authHelper = require("../middleware/authentication");
 
 router.get("/:slug", async (req, res) => {
     const product = await productData.getBySlug(req.params.slug);
@@ -16,7 +17,12 @@ router.get("/:slug", async (req, res) => {
 
 });
 
-router.patch("/:id", async (req, res) => {
+
+router.patch("/:id", async (req, res) => { 
+    if (authHelper.getUserIfAdmin(req) == null) {
+        authHelper.endRequestDueToBeingUnauthorized(res);
+        return
+    }
     // Leave the slug not updated, as that is part of the url and customers may have had it bookmarked.
     delete req.body.slug;
 
