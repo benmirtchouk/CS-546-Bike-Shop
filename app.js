@@ -12,7 +12,10 @@ app.use(static);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.engine('handlebars', exphbs({ defaultLayout: 'main' }));
+app.engine('handlebars', exphbs({ 
+  defaultLayout: 'main',
+  helpers: require('./public/js/helpers.js')
+}));
 app.set('view engine', 'handlebars');
 
 app.use(

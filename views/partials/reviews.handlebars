@@ -1,1 +1,23 @@
-<h1>temp</h1>
+<div id="reviews">
+  {{#each reviews}}
+    <div class="review">
+      <div class="review-likes">
+        <button>▲</button>
+        <p>{{sub likes dislikes}}</p>
+        <button>▼</button>
+      </div>
+
+      <div class="review-body">
+        <div class="review-status">
+          {{#if verified}}
+            <p class="verified">Verified Purchase</p>
+          {{else}}
+            <p class="unverified">Unverified Purchase</p>
+          {{/if}}
+          <p>{{multiply rating "★"}}</p>
+        </div>
+        <p>{{body}}</p>
+      </div>
+    </div>
+  {{/each}}
+</div>

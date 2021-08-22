@@ -5,6 +5,8 @@ const users = require('./users');
 const products = require('./products');
 
 async function get(id) {
+  if (typeof id !== 'string') throw `id must be a string but ${typeof id} provided`;
+
   const reviewsCollection = await reviews();
   let review = await reviewsCollection.findOne({ _id: ObjectId(id) });
 
@@ -15,6 +17,22 @@ async function get(id) {
   }
 
   return review;
+}
+
+async function getByProductId(id) {
+  if (typeof id !== 'string') throw `id must be a string but ${typeof id} provided`;
+
+  const reviewsCollection = await reviews();
+  let product_reviews = await reviewsCollection.find({ product: ObjectId(id) }).toArray();
+
+  product_reviews = product_reviews.map((review) => {
+    review._id = review._id.toString();
+    review.owner = review.owner.toString();
+    review.product = review.product.toString();
+    return review;
+  });
+
+  return product_reviews;
 }
 
 async function create(review) {
@@ -31,6 +49,8 @@ async function create(review) {
     'rating': review.rating,
     'likes': 0,
     'dislikes': 0,
+    'likers': [],
+    'dislikers': [],
     'body': review.body,
     'pictures': review.pictures,
   };
@@ -47,22 +67,37 @@ async function create(review) {
   return inserted;
 }
 
-async function update(id, review) {
+async function like(userid, reviewid) {
+  if (typeof userid !== 'string') throw `userid must be a string but ${typeof userid} provided`;
+  if (typeof reviewid !== 'string') throw `reviewid must be a string but ${typeof reviewid} provided`;
+
+  const user = users.get(userid);
+  if (user === null) throw `no user with id ${userid}`;
+  const review = this.get(reviewid);
+  if (review === null) throw `no review with id ${reviewid}`;
+
+  let updateData = {
+    '$inc': 'likes',
+    '$push': { 'likers': userid }
+  };
+
+  if (review.likers.indexOf(userid) != -1) return review;
+  if (review.dislikers.indexOf(userid) != -1) {
+    updateData = {
+      ...updateData,
+      '$dec': 'dislikes',
+      '$pull': { 'dislikers': userid }
+    }
+  }
+
   const reviewsCollection = await reviews();
-  const updateInfo = await reviewsCollection.updateOne({ _id: ObjectId(id) }, { $set: review });
+  const updateInfo = await reviewsCollection.updateOne({ _id: ObjectId(id) }, updateData);
 
   if (updateInfo.modifiedCount === 0) {
-    throw `Could not update review with id ${id}`;
+    throw `Could not update review with id ${reviewid}`;
   }
-}
 
-async function like(id) {
-  const reviewsCollection = await reviews();
-  const updateInfo = await reviewsCollection.updateOne({ _id: ObjectId(id) }, { $inc: 'likes' });
-
-  if (updateInfo.modifiedCount === 0) {
-    throw `Could not update review with id ${id}`;
-  }
+  return this.get(reviewid);
 }
 
 async function dislike(id) {
@@ -85,7 +120,7 @@ async function remove(id) {
 
 module.exports = {
   get,
+  getByProductId,
   create,
-  update,
   remove,
 };
