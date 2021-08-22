@@ -2,9 +2,13 @@
   {{#each reviews}}
     <div class="review">
       <div class="review-likes">
-        <button>▲</button>
+        {{#if user}}
+          <button onclick="like('{{user._id}}', '{{_id}}')">▲</button>
+        {{else}}
+          <button onclick="alert('You must log in to vote')">▲</button>
+        {{/if}}
         <p>{{sub likes dislikes}}</p>
-        <button>▼</button>
+        <button onclick="dislike('{{_id}}')">▼</button>
       </div>
 
       <div class="review-body">
@@ -21,3 +25,5 @@
     </div>
   {{/each}}
 </div>
+
+<script src="/js/reviews.js"/>
