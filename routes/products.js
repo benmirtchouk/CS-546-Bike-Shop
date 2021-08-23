@@ -98,4 +98,28 @@ router.patch("/:id", async (req, res) => {
     }
 });
 
+router.delete("/:id", async (req, res) => { 
+    if (authHelper.getUserIfAdmin(req) == null) {
+        authHelper.endRequestDueToBeingUnauthorized(res);
+        return
+    }
+
+    // If id is null, route will not be dispatched
+    const id = req.params.id;
+    const product = await productData.get(id)
+    if(!product) {{
+        res.status(404).json({message: "Product not found!"});
+        return
+    }}
+
+    try {
+        await productData.remove(req.params.id)
+        res.status(204).json({});
+    } catch (e) {
+        console.error(e);
+        res.status(500).json({message: "Internal error handling delete"})
+    }
+    
+});
+
 module.exports = router;
