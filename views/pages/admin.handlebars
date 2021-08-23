@@ -78,12 +78,13 @@
 
 <br />
 
-{{#if products}}
+
 <div class="products">
     <h2>All Products</h2> 
     <div>
     <button id="addABike">Add a bike</button>
     </div>
+{{#if products}}
 {{#each products}}
 
 <a class="productCard scrollToProductCard"  data-id="{{_id}}" href="bikes/{{slug}}">
@@ -92,6 +93,8 @@
             <span >Stock: {{stock}}</span>
             <span>
                 <span class="productEditButton">Edit</span>
+                <span> | </span>
+                <span class="productRemoveButton">Remove from Sale</span>
             </span>
         </div>
         <span> Times Viewed: {{pageViews}}</span>
@@ -100,12 +103,14 @@
 
 {{/each}}
 </div>
+{{else}}
+<span> No products currently</span>
 {{/if}}
 <div class="card">
     <ul class="noBullets">
-        <li>Aggregate Site Views: {{metrics.totalSiteViews}}</li>
-        <li>Landing Page Views: {{metrics.landingPageViews}}</li>
-        <li>Summation of Product Views: {{metrics.totalProductViews}}</li>
+        <li title="Aggregation of all sub types">Aggregate Site Views: {{metrics.totalSiteViews}}</li>
+        <li title="Views directly to the homepage">Landing Page Views: {{metrics.landingPageViews}}</li>
+        <li title="This value includes any views to product pages, including deleted products">Summation of Product Views: {{metrics.totalProductViews}}</li>
     </ul>
 </div>
 
