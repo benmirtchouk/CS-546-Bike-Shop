@@ -51,3 +51,9 @@
 {{/each}}
 </div>
 {{/if}}
+
+{{#if user.admin}}
+<p> It looks like there are no products currently. As an admin, you can either add bikes via the <a href='/admin'>Admin portal</a>, or by running the database seed task in npm</p>
+{{else}}
+<p> Products coming soon!</p>
+{{/if}}
