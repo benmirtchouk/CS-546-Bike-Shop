@@ -10,7 +10,6 @@ const slugify = require('slugify');
 
 router.get("/:slug", async (req, res) => {
 
-    // TODO handle null case
     const product = await productData.getBySlug(req.params.slug);
     if(product == null) {
         res.status(404).json({"message": "No product found for that name!"});
