@@ -15,6 +15,40 @@ router.get('/', async function(req, res, next){
     res.render('pages/order', data);
 })
 
+router.post('/cancel', async function(req, res, next){
+    //console.log("Let's cancel something")
+    //console.log(req.body)
+    const _ = await orders.cancel(req.body.id)
+    var orders_list = await orders.getOrdersByUser(req.session.user._id)
+    var ordersItemName = [];
+    for(const eachOrder of orders_list){
+        for(const eachItem of eachOrder.items){
+            var productInfo = await products.get(eachItem);
+            ordersItemName.push(productInfo.name)
+        }
+        eachOrder.ordersItemName =  ordersItemName;
+    }
+
+    var past_orders_list = await orders.getPastOrdersByUser(req.session.user._id)
+    var past_ordersItemName = [];
+    for(const eachOrder of past_orders_list){
+        for(const eachItem of eachOrder.items){
+            var productInfo = await products.get(eachItem);
+            ordersItemName.push(productInfo.name)
+        }
+        eachOrder.ordersItemName =  past_ordersItemName;
+    }
+
+    var msg = "";
+    let data = {
+        PendingOrders: orders_list, 
+        PastOrders: past_orders_list,
+        errorMessage: msg,
+        user: req.session.user
+    }; //need to verify if logged in as registered user
+    res.render('pages/orderSummary', data);
+})
+
 router.get('/pastOrders', async function(req, res, next){
     var orders_list = await orders.getOrdersByUser(req.session.user._id)
     var ordersItemName = [];

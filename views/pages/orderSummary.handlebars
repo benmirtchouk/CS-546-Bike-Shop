@@ -6,13 +6,19 @@
             <th>Item</th>
             <th>OrderDate</th>
             <th>OrderStatus</th>
+            <th>Actions</th>
         </tr>
         {{#each PendingOrders}}
         <tr>
-            <th>{{_id}}</th>
-            <th>{{ordersItemName}}</th>
-            <th>{{datePlaced}}</th>
-            <th>{{status}}</th>
+            <th id="prodID">{{_id}}</th>
+            <th id="ordersItemName">{{ordersItemName}}</th>
+            <th id="datePlaced">{{datePlaced}}</th>
+            <th id="status">{{status}}</th>
+            <th><form id="cancelOrder" action = "/orders/cancel" method="POST">
+                <input type="text" class="form-control" name="id" placeholder="{{_id}}" required=""/>
+                <button type="submit" value="{{_id}}">Cancel Order</button>
+                </form>
+            </th>
         </tr>
         {{/each}}
     </table>
