@@ -15,6 +15,7 @@
             <th id="datePlaced">{{datePlaced}}</th>
             <th id="status">{{status}}</th>
             <th><form id="cancelOrder" action = "/orders/cancel" method="POST">
+                <label>OrderID</label>
                 <input type="text" class="form-control" name="id" placeholder="{{_id}}" required=""/>
                 <button type="submit" value="{{_id}}">Cancel Order</button>
                 </form>
