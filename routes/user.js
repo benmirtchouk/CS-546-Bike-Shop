@@ -5,6 +5,7 @@ const usersData = require('../data/users');
 const productData = require("../data/products");
 const bcrypt = require('bcrypt');
 const {ObjectId} = require('mongodb');
+const xss = require('../config/xss');
 
 router.get("/cart", async (req, res) => {
     try {
@@ -60,7 +61,7 @@ router.post("/register", async (req, res) => {
     } catch (e) {
         res.status(500).send();
     }
-const xss = require('../config/xss');
+})
 
 router.post("/register", async (req, res) => {
   try {
