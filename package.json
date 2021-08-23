@@ -16,6 +16,7 @@
     "express-session": "^1.17.2",
     "joi": "^17.4.2",
     "mongodb": "^3.6.10",
-    "slugify": "^1.6.0"
+    "slugify": "^1.6.0",
+    "xss": "^1.0.9"
   }
 }

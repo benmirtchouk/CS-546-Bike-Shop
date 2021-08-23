@@ -60,6 +60,36 @@ router.post("/register", async (req, res) => {
     } catch (e) {
         res.status(500).send();
     }
+const xss = require('../config/xss');
+
+router.post("/register", async (req, res) => {
+  try {
+    const { error, value: new_user } = new_user_schema.validate(req.body);
+    if (error) {
+      let msg = `Validation error: ${error.details.map(x => x.message).join(', ')}`;
+      res.json({error: msg});
+    } else {
+      new_user.email = xss(new_user.email);
+      new_user.firstName = xss(new_user.firstName);
+      new_user.lastName = xss(new_user.lastName);
+
+      new_user.email = new_user.email.toLowerCase();
+
+      let existing = await usersData.getByEmail(new_user.email);
+      if (existing !== null) {
+        res.json({error: "An account with this email already exists."});
+      } else {
+        // Ensure a user cannot inject themselves as an admin
+        new_user.admin = false
+        let user = await usersData.create(new_user);
+        req.session.user = user;
+        res.json({ user });    
+      }
+    }
+  } catch(e) {
+    console.log(e);
+    res.status(500).send();
+  }
 })
 
 router.get("/logout", async (req, res) => {
