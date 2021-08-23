@@ -104,6 +104,7 @@ const validateEmailPasswordOrError = (emailField, passwordField) => {
             });
 
             return false;
+
         });
     }
 
@@ -124,6 +125,7 @@ const validateEmailPasswordOrError = (emailField, passwordField) => {
                 alert("Passwords do not match");
                 return false;
             }
+
 
             for ([field, label] of [[inputs[3], "First"], [inputs[4], "Last"]]) {
                 const name = field.value;
