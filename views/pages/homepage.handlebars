@@ -16,7 +16,10 @@
     <a class="productCard" href="/bikes/{{slug}}">
         <div> Name: {{name}}</div>
         <div class="productSubtitle">
-            {{#if isLowStock }}
+
+            {{#if isOutOfStock}}
+                <span class="stock">Temporarily out of stock </span>
+            {{else if isLowStock }}
                 <span class="stock lowStock">Only {{stock}} left in stock, order now!</span>
             {{else}}
                 <span class="stock ">Left in Stock: {{stock}}</span>
@@ -59,4 +62,10 @@
     </a>
 {{/each}}
 </div>
+{{else}}
+{{#if user.admin}}
+<p> It looks like there are no products currently. As an admin, you can either add bikes via the <a href='/admin'>Admin portal</a>, or by running the database seed task in npm</p>
+{{else}}
+<p> Products coming soon!</p>
+{{/if}}
 {{/if}}

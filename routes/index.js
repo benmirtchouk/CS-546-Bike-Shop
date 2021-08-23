@@ -24,7 +24,8 @@ const constructorMethod = (app) => {
 
     // Map the model data to what handlebars can use
     productList.map(product => {
-      product.isLowStock = product.stock < 5;
+      product.isOutOfStock = product.stock <= 0;
+      product.isLowStock = product.stock < 5 && !product.isOutOfStock;
       product.price = product.price.toFixed(2);
     });
 

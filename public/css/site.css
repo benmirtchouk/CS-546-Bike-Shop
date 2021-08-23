@@ -28,7 +28,7 @@ div.pageContent {
 }
 
 .lowStock {
-    color: lightcoral;
+    color: #b20000;
 }
 
 .stock {
@@ -53,6 +53,7 @@ div.pageContent {
     display: inline-block;
     padding: .2em;
     transition: top ease-in-out 0.5s;
+    color: black;
 }
 
 .productCard {
@@ -66,7 +67,9 @@ div.pageContent {
     max-width: 80%;
     min-width: 55%;
 }
-.products {
+
+
+.products, #editProductForm, #editProductFormDiv {
     display: flex;
     margin: auto;
     max-width: 80%;
@@ -75,9 +78,25 @@ div.pageContent {
     justify-content: space-evenly;
 }
 
-.productCard:hover {
+#editProductFormDiv.gone {
+    display: none;
+}
+
+#editProductForm div {
+    flex-wrap: wrap;
+    justify-content: left;
+}
+
+#editProductForm button {
+    max-width: 5em;
+    min-width: none;
+    display: inline-block;
+}
+
+.productCard:hover, .card:hover{
     background-color: #BBB;
     top: -0.5em;
+    color: #00409d;
 }
 
 .scrollTarget.productCard:hover{
@@ -205,6 +224,9 @@ Product Page Styles
     justify-content: left;
     transform: translateY(100%);
     margin: 0 !important;
+}
+.carousel-control-prev, .carousel-control-next {
+    color: black;
 }
 
 .carousel-indicators button:first-child {
