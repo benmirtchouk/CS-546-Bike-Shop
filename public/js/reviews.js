@@ -63,3 +63,45 @@ if (review_form) {
     return true;
   });
 }
+
+comment_forms = document.getElementsByClassName('new-comment-form');
+for (let comment_form of comment_forms) {
+  if (comment_form) {
+    comment_form.addEventListener('submit', event => {
+      event.preventDefault();
+      let inputs = comment_form.elements;
+      let comment = inputs['comment'].value.trim();
+      let reviewid = inputs['reviewid'].value;
+
+      if (inputs['userid'] === undefined) {
+        alert('Must be logged in to post a comment.');
+        return false;
+      }
+
+      if (comment.length == 0) {
+        alert('Comment cannot be empty');
+        return false;
+      }
+
+      var requestConfig = {
+        method: 'POST',
+        url: '/reviews/comment',
+        contentType: 'application/json',
+        data: JSON.stringify({ comment, reviewid })
+      };
+
+      $.ajax(requestConfig).then((res) => {
+        if (res.error) {
+          alert(res.error);
+        } else {
+          let comments_ul = document.getElementById(`comments_${reviewid}`);
+          li = document.createElement("li");
+          li.textContent = res.comment;
+          comments_ul.append(li);
+        }
+      });
+
+      return false;
+    });
+  }
+}

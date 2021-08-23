@@ -32,18 +32,22 @@
       <hr>
       
       <h5>Comments:</h5>
-      <ul class="review-comments">
-        <li>hihihihihihihihihihihihihihihihihihi</li>
-        <li>bye</li>
-        <li>asd</li>
+      <ul id="comments_{{_id}}" class="review-comments">
+        {{#each comments}}
+          <li>{{this}}</li>
+        {{/each}}
       </ul>
 
       <hr>
 
-      <form id="new_comment_{{_id}}">
+      <form id="new_comment_{{_id}}" method="POST" action="/reviews/comment" class="new-comment-form">
         <label>
           Add Comment:
           <input type="text" class="comment" name="comment">
+          <input name="reviewid" type="hidden" value="{{_id}}"/>
+          {{#if ../user}}
+            <input name="userid" type="hidden" value="{{../user._id}}"/>
+          {{/if}}
         </label>
         <button type="submit">Add</button>
       </form>

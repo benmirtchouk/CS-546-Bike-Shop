@@ -54,6 +54,7 @@ async function create(review_data) {
   review.dislikes = 0;
   review.likers = [];
   review.dislikers = [];
+  review.comments = [];
 
   const reviewsCollection = await reviews();
   const insertInfo = await reviewsCollection.insertOne(review);
@@ -127,6 +128,21 @@ async function dislike(userid, reviewid) {
   return this.get(reviewid);
 }
 
+async function addComment(reviewid, comment) {
+  if (typeof reviewid !== 'string') throw `reviewid must be a string but ${typeof reviewid} provided`;
+  if (typeof comment !== 'string') throw `comment must be a string but ${typeof comment} provided`;
+  if (comment.length == 0) throw "comment must not be empty.";
+
+  const reviewsCollection = await reviews();
+  const updateInfo = await reviewsCollection.updateOne({ _id: ObjectId(reviewid) }, { $push: {'comments': comment} });
+
+  if (updateInfo.modifiedCount === 0) {
+    throw `Could not update review with id ${reviewid}`;
+  }
+
+  return comment;
+}
+
 async function remove(id) {
   if (typeof id !== 'string') throw `id must be a string but ${typeof id} provided`;
   
@@ -145,4 +161,5 @@ module.exports = {
   like,
   dislike,
   remove,
+  addComment,
 };

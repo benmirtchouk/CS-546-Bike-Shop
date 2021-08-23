@@ -108,4 +108,38 @@ router.post("/add", async (req, res) => {
   }
 });
 
+router.post("/comment", async (req, res) => {
+  try {
+    if (!req.session.user) {
+      return res.json({error: 'Must be logged in to post a comment.'});
+    }
+
+    let reviewid = req.body.reviewid;
+    let comment = xss(req.body.comment.trim());
+
+    try {
+      if (typeof reviewid !== 'string')
+        throw 'reviewid must be a string';
+      let oid = ObjectId(reviewid);
+    } catch (e) {
+      return res.json({ error: 'reviewid must be a valid id string' });
+    }
+
+    const review = await reviewData.get(reviewid);
+    if (review === null) {
+      return res.json({ error: `no review with id ${reviewid}` });
+    }
+
+    if (comment.length == 0) {
+      return res.json({ error: 'Comment body must be non-empty.' });
+    }
+
+    comment = await reviewData.addComment(reviewid, comment);
+
+    res.json({ success: true, comment });
+  } catch(e) {
+    res.status(500).send();
+  }
+});
+
 module.exports = router;
