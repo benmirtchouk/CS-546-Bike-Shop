@@ -346,3 +346,15 @@ input.comment {
 .filter-tags > input {
     margin-right: 10px;
 }
+
+.filters {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+#keyword-search {
+    width: 33%;
+    margin-bottom: 10px;
+}
