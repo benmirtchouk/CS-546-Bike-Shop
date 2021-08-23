@@ -3,6 +3,7 @@ const router = express.Router();
 const new_user_schema = require('../schemas/new_user');
 const usersData = require('../data/users');
 const bcrypt = require('bcrypt');
+const xss = require('../config/xss');
 
 router.post("/register", async (req, res) => {
   try {
@@ -11,6 +12,10 @@ router.post("/register", async (req, res) => {
       let msg = `Validation error: ${error.details.map(x => x.message).join(', ')}`;
       res.json({error: msg});
     } else {
+      new_user.email = xss(new_user.email);
+      new_user.firstName = xss(new_user.firstName);
+      new_user.lastName = xss(new_user.lastName);
+
       new_user.email = new_user.email.toLowerCase();
 
       let existing = await usersData.getByEmail(new_user.email);
@@ -25,6 +30,7 @@ router.post("/register", async (req, res) => {
       }
     }
   } catch(e) {
+    console.log(e);
     res.status(500).send();
   }
 })

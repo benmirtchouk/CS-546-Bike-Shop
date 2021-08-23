@@ -35,29 +35,31 @@ function dislike(reviewid) {
 review_form = document.getElementById("new-review");
 review_form_error = $("#new-review-error");
 
-review_form.addEventListener('submit', event => {
-  review_form_error.hide();
-  review_form_error.empty();
+if (review_form) {
+  review_form.addEventListener('submit', event => {
+    review_form_error.hide();
+    review_form_error.empty();
 
-  let inputs = review_form.elements;
-  let rating = parseInt(inputs[0].value);
-  let body = inputs[1].value.trim();
+    let inputs = review_form.elements;
+    let rating = parseInt(inputs[0].value);
+    let body = inputs[1].value.trim();
 
-  let error = false;
-  if (inputs[0].value === '' || rating === NaN || rating < 1 || rating > 5) {
-    error = true;
-    review_form_error.append("<p>Rating must be an integer between 1 and 5.</p>");
-  }
-  if (body.length == 0) {
-    error = true;
-    review_form_error.append("<p>Review must not be empty.</p>");
-  }
+    let error = false;
+    if (inputs[0].value === '' || rating === NaN || rating < 1 || rating > 5) {
+      error = true;
+      review_form_error.append("<p>Rating must be an integer between 1 and 5.</p>");
+    }
+    if (body.length == 0) {
+      error = true;
+      review_form_error.append("<p>Review must not be empty.</p>");
+    }
 
-  if (error) {
-    event.preventDefault();
-    review_form_error.show();
-    return false;
-  }
+    if (error) {
+      event.preventDefault();
+      review_form_error.show();
+      return false;
+    }
 
-  return true;
-});
+    return true;
+  });
+}

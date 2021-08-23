@@ -3,6 +3,7 @@ const router = express.Router();
 const productData = require("../data/products");
 const reviewData = require("../data/reviews");
 const { ObjectId } = require('mongodb');
+const xss = require('../config/xss');
 
 router.get("/like/:id", async (req, res) => {
   try {
@@ -67,7 +68,7 @@ router.post("/add", async (req, res) => {
 
     let productid = req.body.productid;
     let rating = req.body.rating.trim();
-    let review_body = req.body.body.trim();
+    let review_body = xss(req.body.body.trim());
 
     try {
       if (typeof productid !== 'string')
