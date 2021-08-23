@@ -35,42 +35,43 @@
         </div>
         <div class="col">
             <h1>{{name}}</h1>
-            <h2 id="product-price" class="text-success">{{price}}</h2>
+            <h2 id="price" class="text-success">{{price}}</h2>
             <p>{{description}}</p>
-            <form id="product-form" action="/addToCart" method="POST">
-                <div class="form-group">
-                    <label for="color" class="form-label">Color</label>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
-                        <label class="form-check-label" for="flexRadioDefault1">
-                            Red
-                        </label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2"
-                               checked>
-                        <label class="form-check-label" for="flexRadioDefault2">
-                            Green
-                        </label>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="size" class="form-label">Size</label>
-                    <select class="form-select" aria-label=".form-select-sm example">
-                        <option selected>Open this select menu</option>
-                        <option value="1">One</option>
-                        <option value="2">Two</option>
-                        <option value="3">Three</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="quantity" class="form-label">Quantity</label>
-                    <input type="number" id="quantity" class="form-control" name="quantity"
-                           min="1" max="99" value="1">
-                </div>
+            <form id="product-form" action="/user/cart/{{_id}}" method="POST">
+<!--                <div class="form-group">-->
+<!--                    <label for="color" class="form-label">Color</label>-->
+<!--                    <div class="form-check">-->
+<!--                        <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">-->
+<!--                        <label class="form-check-label" for="flexRadioDefault1">-->
+<!--                            Red-->
+<!--                        </label>-->
+<!--                    </div>-->
+<!--                    <div class="form-check">-->
+<!--                        <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2"-->
+<!--                               checked>-->
+<!--                        <label class="form-check-label" for="flexRadioDefault2">-->
+<!--                            Green-->
+<!--                        </label>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <div class="form-group">-->
+<!--                    <label for="size" class="form-label">Size</label>-->
+<!--                    <select class="form-select" aria-label=".form-select-sm example">-->
+<!--                        <option selected>Open this select menu</option>-->
+<!--                        <option value="1">One</option>-->
+<!--                        <option value="2">Two</option>-->
+<!--                        <option value="3">Three</option>-->
+<!--                    </select>-->
+<!--                </div>-->
+<!--                <div class="form-group">-->
+<!--                    <label for="quantity" class="form-label">Quantity</label>-->
+<!--                    <input type="number" id="quantity" class="form-control" name="quantity"-->
+<!--                           min="1" max="99" value="1">-->
+<!--                </div>-->
                 <div class="form-group row g-3">
-                    <button type="submit" class="btn btn-primary col-auto">Add to Cart</button>
-                    
+                    <button type="submit" class="btn btn-primary col-auto" {{#unless user}}disabled{{/unless}}{{#if isOutOfStock}}disabled{{/if}}>
+                        {{#if isOutOfStock}}Out of Stock{{else}}Add to Cart{{#unless user}} (disabled, login first){{/unless}}{{/if}}
+                    </button>
                     {{#if isOutOfStock}}
                         <div class="col-auto lowStock--label">
                             <p class="text-danger"> <em>Temporarily out of stock </em></p>

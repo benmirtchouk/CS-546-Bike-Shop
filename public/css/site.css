@@ -99,7 +99,7 @@ div.pageContent {
     color: #00409d;
 }
 
-.scrollTarget.productCard:hover{
+.scrollTarget.productCard:hover {
     background-color: #eec600;
     top: -0.5em;
 }
@@ -180,18 +180,27 @@ header {
     display: block;
 }
 
-#auth-header div {
+#auth-header,
+#unauth-header {
+    width: 100%;
     display: flex;
     align-items: center;
+    justify-content: space-between;
 }
 
-#auth-header div > * {
-    margin-left: 10px;
+.nav--left,
+.nav--right {
+    margin: 1rem;
+}
+
+.nav--left p {
+    margin-bottom: 0;
 }
 
 ul.noBullets {
     list-style-type: none;
 }
+
 /*
 --------------------------------
 Product Page Styles
@@ -357,6 +366,7 @@ Product Page Styles
     display: flex;
     align-items: center;
 }
+
 .review-form-elem > label {
     margin-right: 15px;
 }
