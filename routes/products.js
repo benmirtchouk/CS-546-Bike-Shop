@@ -20,7 +20,7 @@ router.get("/:slug", async (req, res) => {
     metrics.notifyProductPageView(product._id);
 
     const reviews = await reviewData.getByProductId(product._id);
-    res.render("pages/product", {...product, user: req.session.user, reviews, partial: 'review-scripts'});
+    res.render("pages/product", {...product, user: req.session.user, reviews, partial: 'review-scripts', footer: {linkHome: true} });
 
 });
 
