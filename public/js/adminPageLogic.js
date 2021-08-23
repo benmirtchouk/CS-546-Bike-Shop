@@ -128,8 +128,22 @@
 
     for(const button of document.getElementsByClassName('productRemoveButton')) {
         button.onclick =  (event) => {
-            alert("STUB: Will send delete to server");
             event.preventDefault();
+            // Get the id from the outer A tag
+            const productCard = button.parentNode.parentNode.parentNode;
+            bikeId = productCard.dataset.id;
+
+            $.ajax({
+                type: "DELETE",
+                url: `bikes/${bikeId}`
+            }).then((res) => {
+                // Redirect to cause a page reload 
+                window.location = "/admin";
+            }).catch((error) => {
+                const status = error.status
+                const message = error.responseJSON.message ? error.responseJSON.message: "Server rejected changes";
+                alert(`${status}: ${message}`);
+            })
         }
     }
 
