@@ -73,90 +73,94 @@ const validateEmailPasswordOrError = (emailField, passwordField) => {
 
     // #MARK: Tab header forms
     const loginForm = document.getElementById("loginForm");
+    if (loginForm) {
+        loginForm.addEventListener('submit', event => {
+            event.preventDefault();
 
-    loginForm.addEventListener('submit', event => {
-        event.preventDefault();
-
-        const inputs = loginForm.elements;
-        if (!validateEmailPasswordOrError(inputs[0], inputs[1])) {
-            return false;
-        }
-
-        var requestConfig = {
-            method: 'POST',
-            url: '/user/login',
-            contentType: 'application/json',
-            data: JSON.stringify({
-                email: inputs[0].value,
-                password: inputs[1].value,
-            })
-        };
-
-        $.ajax(requestConfig).then((res) => {
-            if (res.error) {
-                alert(res.error);
-            } else {
-                $("#unauth-header").hide()
-                const portalLink = res.user.admin ? `<a href="/admin"> Admin Portal </a>` : "";
-                $("#auth-header").html(`<div><p>${res.user.firstName}</p><p>${res.user.lastName}</p>${portalLink}<a href="/orders/pastOrders">Orders</a><a href="/user/logout">Log Out</a></div>`)
-                $("#auth-header").show()
-            }
-        });
-
-        return false;
-    })
-
-    const registerForm = document.getElementById("registerForm");
-
-    registerForm.addEventListener('submit', event => {
-        event.preventDefault();
-
-        const inputs = registerForm.elements;
-
-        const passwordField = inputs[1];
-        if(!validateEmailPasswordOrError(inputs[0], passwordField, event)) {
-            return false;
-        }
-        const password = passwordField.value;
-        const confirmPassword = inputs[2].value;
-        if (password != confirmPassword) {
-            alert("Passwords do not match");
-            return false;
-        }
-
-        for ([field, label] of [[inputs[3], "First"], [inputs[4], "Last"]]) {
-            const name = field.value;
-            const nameError = errorForName(name);
-            if(nameError) {
-                alert(`${label} Name: ${nameError}`)
+            const inputs = loginForm.elements;
+            if (!validateEmailPasswordOrError(inputs[0], inputs[1])) {
                 return false;
             }
-        }
 
-        var requestConfig = {
-            method: 'POST',
-            url: '/user/register',
-            contentType: 'application/json',
-            data: JSON.stringify({
-                email: inputs[0].value,
-                password,
-                confirmPassword,
-                firstName: inputs[3].value,
-                lastName: inputs[4].value
-            })
-        };
+            var requestConfig = {
+                method: 'POST',
+                url: '/user/login',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    email: inputs[0].value,
+                    password: inputs[1].value,
+                })
+            };
 
-        $.ajax(requestConfig).then((res) => {
-            if (res.error) {
-                alert(res.error);
-            } else {
-                $("#unauth-header").hide()
-                $("#auth-header").html(`<div><p>${res.user.firstName}</p><p>${res.user.lastName}</p><a href="/orders/pastOrders">Orders</a><a href="/user/logout">Log Out</a></div>`)
-                $("#auth-header").show()
-            }
+            $.ajax(requestConfig).then((res) => {
+                if (res.error) {
+                    alert(res.error);
+                } else {
+                    $("#unauth-header").hide();
+                    const portalLink = res.user.admin ? `<a href="/admin"> Admin Portal </a>` : "";
+                    $("#auth-header").html(`<div><p>${res.user.firstName}</p><p>${res.user.lastName}</p>${portalLink}<a href="/user/logout">Log Out</a></div>`);
+                    $("#auth-header").show();
+                }
+            });
+
+            return false;
+
         });
+    }
 
-        return false;
-    })
+    const registerForm = document.getElementById("registerForm");
+    if (registerForm) {
+        registerForm.addEventListener('submit', event => {
+            event.preventDefault();
+
+            const inputs = registerForm.elements;
+
+            const passwordField = inputs[1];
+            if(!validateEmailPasswordOrError(inputs[0], passwordField, event)) {
+                return false;
+            }
+            const password = passwordField.value;
+            const confirmPassword = inputs[2].value;
+            if (password != confirmPassword) {
+                alert("Passwords do not match");
+                return false;
+            }
+
+
+            for ([field, label] of [[inputs[3], "First"], [inputs[4], "Last"]]) {
+                const name = field.value;
+                const nameError = errorForName(name);
+                if(nameError) {
+                    alert(`${label} Name: ${nameError}`);
+                    return false;
+                }
+            }
+
+            var requestConfig = {
+                method: 'POST',
+                url: '/user/register',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    email: inputs[0].value,
+                    password,
+                    confirmPassword,
+                    firstName: inputs[3].value,
+                    lastName: inputs[4].value
+                })
+            };
+
+            $.ajax(requestConfig).then((res) => {
+                if (res.error) {
+                    alert(res.error);
+                } else {
+                    $("#unauth-header").hide();
+                    $("#auth-header").html(`<div><p>${res.user.firstName}</p><p>${res.user.lastName}</p><a href="/user/logout">Log Out</a></div>`);
+                    $("#auth-header").show();
+                }
+            });
+
+            return false;
+        });
+    }
 
 })()

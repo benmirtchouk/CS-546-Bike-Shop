@@ -3,6 +3,7 @@ const router = express.Router();
 const productData = require("../data/products");
 const reviewData = require("../data/reviews");
 const { ObjectId } = require('mongodb');
+const xss = require('../config/xss');
 
 router.get("/like/:id", async (req, res) => {
   try {
@@ -67,7 +68,7 @@ router.post("/add", async (req, res) => {
 
     let productid = req.body.productid;
     let rating = req.body.rating.trim();
-    let review_body = req.body.body.trim();
+    let review_body = xss(req.body.body.trim());
 
     try {
       if (typeof productid !== 'string')
@@ -102,6 +103,40 @@ router.post("/add", async (req, res) => {
     });
 
     res.redirect(`/bikes/${req.body.slug}`);
+  } catch(e) {
+    res.status(500).send();
+  }
+});
+
+router.post("/comment", async (req, res) => {
+  try {
+    if (!req.session.user) {
+      return res.json({error: 'Must be logged in to post a comment.'});
+    }
+
+    let reviewid = req.body.reviewid;
+    let comment = xss(req.body.comment.trim());
+
+    try {
+      if (typeof reviewid !== 'string')
+        throw 'reviewid must be a string';
+      let oid = ObjectId(reviewid);
+    } catch (e) {
+      return res.json({ error: 'reviewid must be a valid id string' });
+    }
+
+    const review = await reviewData.get(reviewid);
+    if (review === null) {
+      return res.json({ error: `no review with id ${reviewid}` });
+    }
+
+    if (comment.length == 0) {
+      return res.json({ error: 'Comment body must be non-empty.' });
+    }
+
+    comment = await reviewData.addComment(reviewid, comment);
+
+    res.json({ success: true, comment });
   } catch(e) {
     res.status(500).send();
   }

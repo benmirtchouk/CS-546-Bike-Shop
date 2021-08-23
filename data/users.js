@@ -61,12 +61,9 @@ async function addToCart(id, productid) {
 
 async function getCart(id) {
   if (typeof id !== 'string') throw `id must be a string but ${typeof id} provided`;
-
-  const user = this.get(id);
+  const user = await this.get(id);
   if (user === null) throw `no user with ${id} found`;
-
-  const cartIds = user.cart;
-  return cartIds.map((id) => products.get(id));
+  return user.cart;
 }
 
 async function remove(id) {

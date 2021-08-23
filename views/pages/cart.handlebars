@@ -1,0 +1,19 @@
+<div class="container">
+    <h1>Items in Cart: </h1>
+    {{#each cart}}
+        <a class="card mb-4 mt-4" href="/bikes/{{slug}}">
+            <div class="row g-0">
+                <div class="col-md-4">
+                    <img src="{{pictures.[0]}}" class="img-fluid rounded-start" alt="...">
+                </div>
+                <div class="col-md-8">
+                    <div class="card-body">
+                        <h2 class="card-title">{{name}}</h2>
+                        <p class="card-text">{{description}}</p>
+                        <p class="card-text price">{{price}}</p>
+                    </div>
+                </div>
+            </div>
+        </a>
+    {{/each}}
+</div>

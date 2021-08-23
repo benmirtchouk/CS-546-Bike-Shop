@@ -24,9 +24,12 @@ const constructorMethod = (app) => {
 
     // Map the model data to what handlebars can use
     productList.map(product => {
-      product.isLowStock = product.stock < 5;
+      product.isOutOfStock = product.stock <= 0;
+      product.isLowStock = product.stock < 5 && !product.isOutOfStock;
       product.price = product.price.toFixed(2);
     });
+
+    const tags = await products.getAllTags();
 
     const handlebarData = {
       header: {
@@ -36,7 +39,9 @@ const constructorMethod = (app) => {
         title: "Bike Shop"
       },
       bikes: productList,
-      user: req.session.user
+      user: req.session.user,
+      tags: tags,
+      partial: 'homepage-scripts'
     };
     
     res.render("pages/homepage", handlebarData);
