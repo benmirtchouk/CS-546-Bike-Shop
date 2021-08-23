@@ -1,31 +1,52 @@
 <div id="reviews">
   {{#each reviews}}
-    <div id="review_{{_id}}" class="review">
-      <div class="review-likes">
-        {{#if ../user}}
-          <button onclick="like('{{_id}}')" class="{{ifinside ../user._id likers 'rating-active' ''}}">▲</button>
-        {{else}}
-          <button onclick="alert('You must log in to vote')">▲</button>
-        {{/if}}
-        <p>{{sub likes dislikes}}</p>
-        {{#if ../user}}
-          <button onclick="dislike('{{_id}}')" class="{{ifinside ../user._id dislikers 'rating-active' ''}}">▼</button>
-        {{else}}
-          <button onclick="alert('You must log in to vote')">▼</button>
-        {{/if}}
+    <div class="full-review">
+      <div id="review_{{_id}}" class="review">
+        <div class="review-likes">
+          {{#if ../user}}
+            <button onclick="like('{{_id}}')" class="{{ifinside ../user._id likers 'rating-active' ''}}">▲</button>
+          {{else}}
+            <button onclick="alert('You must log in to vote')">▲</button>
+          {{/if}}
+          <p>{{sub likes dislikes}}</p>
+          {{#if ../user}}
+            <button onclick="dislike('{{_id}}')" class="{{ifinside ../user._id dislikers 'rating-active' ''}}">▼</button>
+          {{else}}
+            <button onclick="alert('You must log in to vote')">▼</button>
+          {{/if}}
+        </div>
+
+        <div class="review-body">
+          <div class="review-status">
+            {{#if verified}}
+              <p class="verified">Verified Purchase</p>
+            {{else}}
+              <p class="unverified">Unverified Purchase</p>
+            {{/if}}
+            <p>{{multiply rating "★"}}</p>
+          </div>
+          <p>{{body}}</p>
+        </div>
       </div>
 
-      <div class="review-body">
-        <div class="review-status">
-          {{#if verified}}
-            <p class="verified">Verified Purchase</p>
-          {{else}}
-            <p class="unverified">Unverified Purchase</p>
-          {{/if}}
-          <p>{{multiply rating "★"}}</p>
-        </div>
-        <p>{{body}}</p>
-      </div>
+      <hr>
+      
+      <h5>Comments:</h5>
+      <ul class="review-comments">
+        <li>hihihihihihihihihihihihihihihihihihi</li>
+        <li>bye</li>
+        <li>asd</li>
+      </ul>
+
+      <hr>
+
+      <form id="new_comment_{{_id}}">
+        <label>
+          Add Comment:
+          <input type="text" class="comment" name="comment">
+        </label>
+        <button type="submit">Add</button>
+      </form>
     </div>
   {{/each}}
 </div>
