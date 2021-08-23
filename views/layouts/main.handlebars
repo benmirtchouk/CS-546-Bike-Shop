@@ -81,9 +81,11 @@
       </div>
     {{/unless}}
     </header>
+    
     <div id="pageContent">
       {{{body}}}
     </div>
+
     {{#if footer}}
     <footer>
       {{footer.text}}
@@ -100,5 +102,9 @@
     <script src="/js/loginForm.js"></script>
     <script src="/js/orderTotal.js"></script>
     <script src="/js/price.js"></script>
+
+    {{#if partial}}
+      {{> (lookup . 'partial') }}
+    {{/if}}
   </body>
 </html>

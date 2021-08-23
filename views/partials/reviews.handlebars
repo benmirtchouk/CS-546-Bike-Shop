@@ -1,0 +1,57 @@
+<div id="reviews">
+  {{#each reviews}}
+    <div id="review_{{_id}}" class="review">
+      <div class="review-likes">
+        {{#if ../user}}
+          <button onclick="like('{{_id}}')" class="{{ifinside ../user._id likers 'rating-active' ''}}">▲</button>
+        {{else}}
+          <button onclick="alert('You must log in to vote')">▲</button>
+        {{/if}}
+        <p>{{sub likes dislikes}}</p>
+        {{#if ../user}}
+          <button onclick="dislike('{{_id}}')" class="{{ifinside ../user._id dislikers 'rating-active' ''}}">▼</button>
+        {{else}}
+          <button onclick="alert('You must log in to vote')">▼</button>
+        {{/if}}
+      </div>
+
+      <div class="review-body">
+        <div class="review-status">
+          {{#if verified}}
+            <p class="verified">Verified Purchase</p>
+          {{else}}
+            <p class="unverified">Unverified Purchase</p>
+          {{/if}}
+          <p>{{multiply rating "★"}}</p>
+        </div>
+        <p>{{body}}</p>
+      </div>
+    </div>
+  {{/each}}
+</div>
+
+<div>
+  {{#if user}}
+    <h2>Post new review</h2>
+    <form id="new-review" method="POST" action="/reviews/add">
+      <div class="review-form-elem">
+        <label for="rating">Rating:</label>
+        <input id="rating" name="rating" type="number" min="1" max="5"/>
+      </div>
+
+      <div class="review-form-elem">
+        <label for="body">Review:</label>
+        <textarea id="body" name="body"></textarea>
+      </div>
+      
+      <button type="submit">Submit</button>
+      <input name="productid" type="hidden" value="{{_id}}"/>
+      <input name="slug" type="hidden" value="{{slug}}"/>
+    </form>
+
+    <div id="new-review-error" class="error">
+    </div>
+  {{else}}
+    <p>Log in to submit your review.</p>
+  {{/if}}
+</div>

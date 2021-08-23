@@ -187,6 +187,11 @@ async function seedDB() {
         console.log("review seeded");
         const reviewIds = Object.keys(reviewIdsMap);
 
+        await data.reviews.like(userIds[0], reviewIds[0]);
+        await data.reviews.like(userIds[1], reviewIds[0]);
+        await data.reviews.like(userIds[2], reviewIds[0]);
+        await data.reviews.dislike(userIds[0], reviewIds[0]);
+        console.log("review likes/dislikes seeded");
 
         // As other routes report metrics while being populated, clear now so the seed data is consistent.
         const metricCollection = await metrics();

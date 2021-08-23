@@ -64,7 +64,7 @@ router.get("/", async (req, res) => {
 
     const handlebarData = handlebarHelper.mergeHandleBarObjects(req.baseHandlebarData, additionalHandlebarData);
 
-    res.render('layouts/admin', handlebarData);
+    res.render('pages/admin', handlebarData);
 });
 
 
