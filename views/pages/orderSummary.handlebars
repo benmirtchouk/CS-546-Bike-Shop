@@ -1,0 +1,39 @@
+{{#if user}}
+<h1>Pending Orders</h1> 
+    <table style="width:100%">
+        <tr>
+            <th>OrderID</th>
+            <th>Item</th>
+            <th>OrderDate</th>
+            <th>OrderStatus</th>
+        </tr>
+        {{#each PendingOrders}}
+        <tr>
+            <th>{{_id}}</th>
+            <th>{{ordersItemName}}</th>
+            <th>{{datePlaced}}</th>
+            <th>{{status}}</th>
+        </tr>
+        {{/each}}
+    </table>
+<h1>Past Orders</h1> 
+    <table style="width:100%">
+        <tr>
+            <th>OrderID</th>
+            <th>Item</th>
+            <th>OrderDate</th>
+            <th>OrderStatus</th>
+        </tr>
+        {{#each PastOrders}}
+        <tr>
+            <th>{{_id}}</th>
+            <th>{{ordersItemName}}</th>
+            <th>{{datePlaced}}</th>
+            <th>{{status}}</th>
+        </tr>
+        {{/each}}
+    </table>
+{{else}}
+    <h2>This is restricted page, Please Login First</h2>
+    <a href="/">Homepage</a>
+{{/if}}
