@@ -58,4 +58,53 @@ router.get("/dislike/:id", async (req, res) => {
   }
 });
 
+
+router.post("/add", async (req, res) => {
+  try {
+    if (!req.session.user) {
+      return res.json({error: 'Must be logged in to post a review.'});
+    }
+
+    let productid = req.body.productid;
+    let rating = req.body.rating.trim();
+    let review_body = req.body.body.trim();
+
+    try {
+      if (typeof productid !== 'string')
+        throw 'productid must be a string';
+      let oid = ObjectId(productid);
+    } catch (e) {
+      return res.json({ error: 'productid must be a valid id string' });
+    }
+
+    const product = await productData.get(productid);
+    if (product === null) {
+      return res.json({ error: `no product with id ${productid}` });
+    }
+
+    try {
+      if (rating.length == 0 || isNaN(rating)) throw 'rating must be an integer';
+      rating = parseInt(rating);
+      if (rating < 1 || rating > 5) throw 'rating must be between 1 and 5.'
+    } catch (e) {
+      return res.json({ error: 'rating must be a valid integer between 1 and 5' });
+    }
+
+    if (review_body.length == 0) {
+      return res.json({ error: 'Review body must be non-empty.' });
+    }
+
+    let review = await reviewData.create({
+      owner: req.session.user._id,
+      product: productid,
+      rating: rating, 
+      body: review_body
+    });
+
+    res.redirect(`/bikes/${req.body.slug}`);
+  } catch(e) {
+    res.status(500).send();
+  }
+});
+
 module.exports = router;

@@ -3,6 +3,7 @@ const mongoCollections = require('../config/mongoCollections');
 const reviews = mongoCollections.reviews;
 const users = require('./users');
 const products = require('./products');
+const new_review_schema = require('../schemas/new_review');
 
 async function get(id) {
   if (typeof id !== 'string') throw `id must be a string but ${typeof id} provided`;
@@ -35,28 +36,27 @@ async function getByProductId(id) {
   return product_reviews;
 }
 
-async function create(review) {
+async function create(review_data) {
+  const { error, value: review } = new_review_schema.validate(review_data, {abortEarly: false, allowUnknown: true, stripUnknown: true});
+  if (error) throw error.details.map(x => x.message).join(', ');
+
   const owner = await users.get(review.owner);
   if (owner === null) throw `no user with id ${review.owner}`;
 
   const product = await products.get(review.product);
   if (product === null) throw `no product with id ${review.product}`;
 
-  const newReview = {
-    'owner': ObjectId(review.owner),
-    'product': ObjectId(review.product),
-    'verified': review.verified, //TODO, do we need to automate the verification process?
-    'rating': review.rating,
-    'likes': 0,
-    'dislikes': 0,
-    'likers': [],
-    'dislikers': [],
-    'body': review.body,
-    'pictures': review.pictures,
-  };
+  review.owner = ObjectId(review.owner);
+  review.product = ObjectId(review.product);
+  if (review.verified === undefined) review.verified = false;
+  if (review.pictures === undefined) review.pictures = [];
+  review.likes = 0;
+  review.dislikes = 0;
+  review.likers = [];
+  review.dislikers = [];
 
   const reviewsCollection = await reviews();
-  const insertInfo = await reviewsCollection.insertOne(newReview);
+  const insertInfo = await reviewsCollection.insertOne(review);
   if (insertInfo.insertedCount === 0) throw 'Could not add new review';
 
   let inserted = insertInfo.ops[0];

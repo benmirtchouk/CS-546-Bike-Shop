@@ -30,4 +30,28 @@
   {{/each}}
 </div>
 
-<script src="/js/reviews.js"/>
+<div>
+  {{#if user}}
+    <h2>Post new review</h2>
+    <form id="new-review" method="POST" action="/reviews/add">
+      <div class="review-form-elem">
+        <label for="rating">Rating:</label>
+        <input id="rating" name="rating" type="number" min="1" max="5"/>
+      </div>
+
+      <div class="review-form-elem">
+        <label for="body">Review:</label>
+        <textarea id="body" name="body"></textarea>
+      </div>
+      
+      <button type="submit">Submit</button>
+      <input name="productid" type="hidden" value="{{_id}}"/>
+      <input name="slug" type="hidden" value="{{slug}}"/>
+    </form>
+
+    <div id="new-review-error" class="error">
+    </div>
+  {{else}}
+    <p>Log in to submit your review.</p>
+  {{/if}}
+</div>
