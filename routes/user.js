@@ -17,7 +17,7 @@ router.get("/cart", async (req, res) => {
         for (let i = 0; i < cartIds.length; i++)
             cart[i] = await productData.get(cartIds[i]);
 
-        res.render("pages/cart", {cart, user: req.session.user});
+        res.render("pages/cart", {cart, user: req.session.user, page: {title: 'Cart'} });
     } catch (e) {
         return res.json({error: e});
     }
