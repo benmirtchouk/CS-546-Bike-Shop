@@ -98,6 +98,18 @@ async function getAllInStock(){
   return productList;
 }
 
+async function getAllTags() {
+  const productsCollection = await products();
+  const productList = await productsCollection.find({}).toArray();
+
+  let s = new Set();
+  productList.forEach(({tags}) => {
+    tags.forEach(tag => s.add(tag));
+  });
+
+  return [...s];
+}
+
 module.exports = {
   get,
   getBySlug,
@@ -107,5 +119,6 @@ module.exports = {
   remove,
   getbyName,
   updateStock,
-  getAllInStock
+  getAllInStock,
+  getAllTags
 };

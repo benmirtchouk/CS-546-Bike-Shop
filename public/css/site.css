@@ -343,3 +343,6 @@ input.comment {
     width: 110px;
 }
 
+.filter-tags > input {
+    margin-right: 10px;
+}
