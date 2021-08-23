@@ -25,6 +25,7 @@
                 {{/if}}
                 <span>Logged in as {{user.firstName}}&nbsp;{{user.lastName}}.</span>
                 <a href="/user/cart">Cart{{#if user.cart.length}} ({{user.cart.length}}){{/if}}</a>
+                <a href="/orders/pastOrders">Orders</a>
                 <a href="/user/logout">Log Out</a>
             </div>
         </div>
