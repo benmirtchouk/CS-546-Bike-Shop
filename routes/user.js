@@ -30,6 +30,7 @@ router.post("/cart/:id", async (req, res) => {
         if (typeof productId !== 'string')
             return res.json({error: 'Invalid product ID. Must be string.'});
         await usersData.addToCart(req.session.user._id, productId);
+        req.session.user.cart.push(productId)
         return res.redirect('/user/cart')
     } catch (e) {
         return res.json({error: e});
