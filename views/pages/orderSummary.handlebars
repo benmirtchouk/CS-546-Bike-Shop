@@ -1,0 +1,45 @@
+{{#if user}}
+<h1>Pending Orders</h1> 
+    <table style="width:100%">
+        <tr>
+            <th>OrderID</th>
+            <th>Item</th>
+            <th>OrderDate</th>
+            <th>OrderStatus</th>
+            <th>Actions</th>
+        </tr>
+        {{#each PendingOrders}}
+        <tr>
+            <th id="prodID">{{_id}}</th>
+            <th id="ordersItemName">{{ordersItemName}}</th>
+            <th id="datePlaced">{{datePlaced}}</th>
+            <th id="status">{{status}}</th>
+            <th><form id="cancelOrder" action = "/orders/cancel" method="POST">
+                <input type="text" class="form-control" name="id" placeholder="{{_id}}" required=""/>
+                <button type="submit" value="{{_id}}">Cancel Order</button>
+                </form>
+            </th>
+        </tr>
+        {{/each}}
+    </table>
+<h1>Past Orders</h1> 
+    <table style="width:100%">
+        <tr>
+            <th>OrderID</th>
+            <th>Item</th>
+            <th>OrderDate</th>
+            <th>OrderStatus</th>
+        </tr>
+        {{#each PastOrders}}
+        <tr>
+            <th>{{_id}}</th>
+            <th>{{ordersItemName}}</th>
+            <th>{{datePlaced}}</th>
+            <th>{{status}}</th>
+        </tr>
+        {{/each}}
+    </table>
+{{else}}
+    <h2>This is restricted page, Please Login First</h2>
+    <a href="/">Homepage</a>
+{{/if}}

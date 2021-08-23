@@ -21,6 +21,33 @@ async function get(id) {
   return order;
 }
 
+async function getOrdersByUser(userId){
+  if (typeof userId !== 'string') throw `user id must be a string but ${typeof id} provided`;
+  try{
+    const ordersCollection = await orders();
+    let allOrder = await ordersCollection.find({owner: ObjectId(userId)}).toArray()
+    //console.log(allOrder);
+    return allOrder;
+  }catch(e){
+    console.log('Failed to find orders :'+e)
+    return null;
+  }
+}
+
+async function getPastOrdersByUser(userId){
+  if (typeof userId !== 'string') throw `user id must be a string but ${typeof id} provided`;
+  try{
+    const ordersCollection = await orders();
+    let allOrder = await ordersCollection.find({owner: ObjectId(userId), status:{$in: ['completed','cancelled','delivered']}}).toArray()
+    //console.log(allOrder);
+    return allOrder;
+  }catch(e){
+    console.log('Failed to find orders :'+e)
+    return null;
+  }
+}
+
+
 async function create(order_data) {
   const { error, value: order } = new_order_schema.validate(order_data, {abortEarly: false, allowUnknown: true, stripUnknown: true});
   if (error) throw error.details.map(x => x.message).join(', ');
@@ -116,5 +143,7 @@ module.exports = {
   addUpdate,
   updateStatus,
   remove,
-  aggregateOrders
+  aggregateOrders,
+  getOrdersByUser,
+  getPastOrdersByUser
 };
