@@ -30,7 +30,9 @@ async function create(productData) {
   if (error) {
       throw error
   }
-  
+
+  const existing = await getBySlug(product.slug);
+  if (existing) { throw "Slug already in use, product cannot be created with this name. Try a new name or adding a number at the end!" }
   const productsCollection = await products();
   const insertInfo = await productsCollection.insertOne(product);
   if (insertInfo.insertedCount === 0) throw 'Could not add new product';
