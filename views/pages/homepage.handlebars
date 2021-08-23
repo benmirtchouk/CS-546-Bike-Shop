@@ -1,9 +1,20 @@
 {{#if bikes}}
 <h1>Product Offerings</h1> 
+
+<div class="filters">
+    <input type="text" id="keyword-search" placeholder="Filter Keyword"/>
+    <div class="filter-tags">
+        {{#each tags}}
+            <label for="tag_{{this}}">{{this}}</label>
+            <input type="checkbox" id="tag_{{this}}" name="{{this}}"/>
+        {{/each}}
+    </div>
+</div>
+
 <div class="products">
 {{#each bikes}}
     <a class="productCard" href="/bikes/{{slug}}">
-        <div> Name: {{name}} </div>
+        <div> Name: {{name}}</div>
         <div class="productSubtitle">
 
             {{#if isOutOfStock}}
@@ -16,6 +27,7 @@
             <span class="price">Price: ${{price}}</span>
         </div>
         <p>Description: {{description}}</p>
+        <p class="tags">Tags: {{tags}}</p>
         <span> 
             Specs:
             {{#if specs.length}}

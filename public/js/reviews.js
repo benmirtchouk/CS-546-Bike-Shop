@@ -35,29 +35,73 @@ function dislike(reviewid) {
 review_form = document.getElementById("new-review");
 review_form_error = $("#new-review-error");
 
-review_form.addEventListener('submit', event => {
-  review_form_error.hide();
-  review_form_error.empty();
+if (review_form) {
+  review_form.addEventListener('submit', event => {
+    review_form_error.hide();
+    review_form_error.empty();
 
-  let inputs = review_form.elements;
-  let rating = parseInt(inputs[0].value);
-  let body = inputs[1].value.trim();
+    let inputs = review_form.elements;
+    let rating = parseInt(inputs[0].value);
+    let body = inputs[1].value.trim();
 
-  let error = false;
-  if (inputs[0].value === '' || rating === NaN || rating < 1 || rating > 5) {
-    error = true;
-    review_form_error.append("<p>Rating must be an integer between 1 and 5.</p>");
+    let error = false;
+    if (inputs[0].value === '' || rating === NaN || rating < 1 || rating > 5) {
+      error = true;
+      review_form_error.append("<p>Rating must be an integer between 1 and 5.</p>");
+    }
+    if (body.length == 0) {
+      error = true;
+      review_form_error.append("<p>Review must not be empty.</p>");
+    }
+
+    if (error) {
+      event.preventDefault();
+      review_form_error.show();
+      return false;
+    }
+
+    return true;
+  });
+}
+
+comment_forms = document.getElementsByClassName('new-comment-form');
+for (let comment_form of comment_forms) {
+  if (comment_form) {
+    comment_form.addEventListener('submit', event => {
+      event.preventDefault();
+      let inputs = comment_form.elements;
+      let comment = inputs['comment'].value.trim();
+      let reviewid = inputs['reviewid'].value;
+
+      if (inputs['userid'] === undefined) {
+        alert('Must be logged in to post a comment.');
+        return false;
+      }
+
+      if (comment.length == 0) {
+        alert('Comment cannot be empty');
+        return false;
+      }
+
+      var requestConfig = {
+        method: 'POST',
+        url: '/reviews/comment',
+        contentType: 'application/json',
+        data: JSON.stringify({ comment, reviewid })
+      };
+
+      $.ajax(requestConfig).then((res) => {
+        if (res.error) {
+          alert(res.error);
+        } else {
+          let comments_ul = document.getElementById(`comments_${reviewid}`);
+          li = document.createElement("li");
+          li.textContent = res.comment;
+          comments_ul.append(li);
+        }
+      });
+
+      return false;
+    });
   }
-  if (body.length == 0) {
-    error = true;
-    review_form_error.append("<p>Review must not be empty.</p>");
-  }
-
-  if (error) {
-    event.preventDefault();
-    review_form_error.show();
-    return false;
-  }
-
-  return true;
-});
+}
