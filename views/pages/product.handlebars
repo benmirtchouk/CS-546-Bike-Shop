@@ -5,7 +5,7 @@
                 <div class="carousel-inner">
                     {{#each pictures}}
                         <div class="carousel-item carousel-image {{#unless @index}}active{{/unless}}">
-                            <img src="{{this}}" class="d-block w-100" alt="TODO">
+                            <img src="{{this}}" class="d-block w-100" alt="{{../name}} in action.">
                         </div>
                     {{/each}}
                 </div>
@@ -24,7 +24,7 @@
                         <button type="button" data-bs-target="#productImages"
                                 {{#unless @index}}class="active"{{/unless}} data-bs-slide-to="{{@index}}"
                                 aria-label="Slide {{@index}}">
-                            <img src="{{this}}" class="d-block w-100" alt="TODO">
+                            <img src="{{this}}" class="d-block w-100" alt="{{../name}} in action.">
                         </button>
                     {{/each}}
                 </div>

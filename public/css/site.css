@@ -28,7 +28,7 @@ div.pageContent {
 }
 
 .lowStock {
-    color: lightcoral;
+    color: #b20000;
 }
 
 .stock {
@@ -53,6 +53,7 @@ div.pageContent {
     display: inline-block;
     padding: .2em;
     transition: top ease-in-out 0.5s;
+    color: black;
 }
 
 .productCard {
@@ -92,9 +93,10 @@ div.pageContent {
     display: inline-block;
 }
 
-.productCard:hover {
+.productCard:hover, .card:hover{
     background-color: #BBB;
     top: -0.5em;
+    color: #00409d;
 }
 
 .scrollTarget.productCard:hover {
@@ -231,6 +233,9 @@ Product Page Styles
     justify-content: left;
     transform: translateY(100%);
     margin: 0 !important;
+}
+.carousel-control-prev, .carousel-control-next {
+    color: black;
 }
 
 .carousel-indicators button:first-child {

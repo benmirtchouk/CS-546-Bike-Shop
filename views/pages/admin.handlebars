@@ -15,38 +15,40 @@
 {{/if}}
 
 <br />
+
 <div id="editProductFormDiv" class="gone">
-    <span id="editProductFormText"></span>
+    <span><span id="editProductFormText"></span> <button id="closeEditProductForm"> Close bike form </button></span>
+    
     <form id="editProductForm" method="POST" action="/bikes-noop" >
         <div>
             <label>
-            Name: <input type="text" name="name"/>
+            Name: <input type="text" name="name" class="requiredIfNew" />
             </label>
             <label>
-            Price: <input type="number" name="price" step="0.01" min="1"/>
+            Price: <input type="number" name="price" step="0.01" min="1" class="requiredIfNew"/>
             </label>
             <label>
-            Stock: <input type="number" name="stock" min="0"/>
+            Stock: <input type="number" name="stock" min="0" class="requiredIfNew"/>
             </label>
             <label>
-            Tags: <textarea name="tags" form="editProductForm" rows="1" placeholder="Include current tags "></textarea>
+            Tags: <textarea name="tags" form="editProductForm" rows="1" placeholder="Include current tags " class="requiredIfNew"></textarea>
             </label>
         </div>
 
         <label>
         Description:
-        <textarea name="description" form="editProductForm" rows="1"></textarea>
+        <textarea name="description" form="editProductForm" rows="1" class="requiredIfNew"></textarea>
         </label>
 
         <div>
             <label>
-            Length: <input type="number" name="specs.length" min="1"/>
+            Length: <input type="number" name="specs.length" min="1" class="requiredIfNew"/>
             </label>
             <label>
-            Width: <input type="number" name="specs.width" min="1"/>
+            Width: <input type="number" name="specs.width" min="1" class="requiredIfNew"/>
             </label>
             <label>
-            Height: <input type="number" name="specs.height" min="1"/>
+            Height: <input type="number" name="specs.height" min="1" class="requiredIfNew"/>
             </label>
             <label>
             Frame: <input type="text" name="specs.frame"/>
@@ -67,7 +69,7 @@
             Chain: <input type="text" name="specs.chain"/>
             </label>
         </div>
-        <button type="submit">Update!</button>
+        <button type="submit" id="editProductFormSubmit">Update!</button>
 
     </form>
 </div>
@@ -76,9 +78,13 @@
 
 <br />
 
-{{#if products}}
+
 <div class="products">
     <h2>All Products</h2> 
+    <div>
+    <button id="addABike">Add a bike</button>
+    </div>
+{{#if products}}
 {{#each products}}
 
 <a class="productCard scrollToProductCard"  data-id="{{_id}}" href="bikes/{{slug}}">
@@ -87,6 +93,8 @@
             <span >Stock: {{stock}}</span>
             <span>
                 <span class="productEditButton">Edit</span>
+                <span> | </span>
+                <span class="productRemoveButton">Remove from Sale</span>
             </span>
         </div>
         <span> Times Viewed: {{pageViews}}</span>
@@ -95,12 +103,14 @@
 
 {{/each}}
 </div>
+{{else}}
+<span> No products currently</span>
 {{/if}}
 <div class="card">
     <ul class="noBullets">
-        <li>Aggregate Site Views: {{metrics.totalSiteViews}}</li>
-        <li>Landing Page Views: {{metrics.landingPageViews}}</li>
-        <li>Summation of Product Views: {{metrics.totalProductViews}}</li>
+        <li title="Aggregation of all sub types">Aggregate Site Views: {{metrics.totalSiteViews}}</li>
+        <li title="Views directly to the homepage">Landing Page Views: {{metrics.landingPageViews}}</li>
+        <li title="This value includes any views to product pages, views on deleted products will not be shown but are still stored. ">Summation of Product Views: {{metrics.totalProductViews}}</li>
     </ul>
 </div>
 
