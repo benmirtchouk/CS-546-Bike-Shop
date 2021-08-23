@@ -52,7 +52,7 @@ async function addToCart(id, productid) {
   if (typeof productid !== 'string') throw `productid must be a string but ${typeof productid} provided`;
 
   const usersCollection = await users();
-  const updateInfo = usersCollection.updateOne({ _id: ObjectId(id) }, { $push: { cart: productid } });
+  const updateInfo = usersCollection.updateOne({ _id: ObjectId(id) }, { $push: { cart: ObjectId(productid) } });
 
   if (updateInfo.modifiedCount === 0) {
     throw `Could not update user with id ${id}`;

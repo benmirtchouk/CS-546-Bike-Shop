@@ -22,7 +22,7 @@ router.get("/cart", async (req, res) => {
     }
 })
 
-router.post("/cart", async (req, res) => {
+router.post("/cart/:id", async (req, res) => {
     try {
         if (!req.session.user)
             return res.json({error: 'Must be logged in add to cart.'});
@@ -30,6 +30,7 @@ router.post("/cart", async (req, res) => {
         if (typeof productId !== 'string')
             return res.json({error: 'Invalid product ID. Must be string.'});
         await usersData.addToCart(req.session.user._id, productId);
+        return res.redirect('/user/cart')
     } catch (e) {
         return res.json({error: e});
     }

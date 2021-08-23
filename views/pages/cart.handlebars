@@ -1,6 +1,6 @@
 <div class="container">
     {{#each cart}}
-        <div class="card mb-4 mt-4">
+        <a class="card mb-4 mt-4" href="/bikes/{{slug}}">
             <div class="row g-0">
                 <div class="col-md-4">
                     <img src="{{pictures.[0]}}" class="img-fluid rounded-start" alt="...">
@@ -13,6 +13,6 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </a>
     {{/each}}
 </div>
