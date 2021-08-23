@@ -11,7 +11,7 @@ router.get("/:slug", async (req, res) => {
     const product = await productData.getBySlug(req.params.slug);
     product.isOutOfStock = product.stock <= 0;
     product.isLowStock = product.stock < 5 && !product.isOutOfStock;
-    metrics.notifyProductPageView(model._id);
+    metrics.notifyProductPageView(product._id);
 
     const reviews = await reviewData.getByProductId(product._id);
     res.render("pages/product", {...product, user: req.session.user, reviews, partial: 'review-scripts'});
@@ -29,7 +29,7 @@ router.patch("/:id", async (req, res) => {
 
     // If id is null, the route selector will not match
     const id = req.params.id
-    const product = await data.get(id);
+    const product = await productData.get(id);
 
     if(product == null) {
         res.status(404).json({message: "Specified object not found"});
@@ -52,7 +52,7 @@ router.patch("/:id", async (req, res) => {
     }
 
     try {
-        await data.update(id, validatedProduct);
+        await productData.update(id, validatedProduct);
         res.status(204).json({});
     } catch (e){
         console.error(e);
