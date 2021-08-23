@@ -69,7 +69,7 @@
 <!--                           min="1" max="99" value="1">-->
 <!--                </div>-->
                 <div class="form-group row g-3">
-                    <button type="submit" class="btn btn-primary col-auto" {{#unless user}}disabled{{/unless}}{{#if isOutOfStock}}disabled{{/if}}>
+                    <button type="submit" class="btn btn-primary col-auto" {{#unless user}}disabled{{/unless}} {{#if isOutOfStock}}disabled{{/if}}>
                         {{#if isOutOfStock}}Out of Stock{{else}}Add to Cart{{#unless user}} (disabled, login first){{/unless}}{{/if}}
                     </button>
                     {{#if isOutOfStock}}
