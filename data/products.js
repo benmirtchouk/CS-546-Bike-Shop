@@ -4,6 +4,8 @@ const products = mongoCollections.products;
 const productSchema = require('../schemas/new_product');
 
 async function get(id) {
+  if (typeof id !== 'string') throw `id must be a string but ${typeof id} provided`;
+
   const productsCollection = await products();
   const product = await productsCollection.findOne({ _id: ObjectId(id) });
 
@@ -15,6 +17,8 @@ async function get(id) {
 }
 
 async function getBySlug(slug) {
+  if (typeof slug !== 'string') throw `slug must be a string but ${typeof slug} provided`;
+
   const productsCollection = await products();
   const product = await productsCollection.findOne({ slug: slug });
 
@@ -28,7 +32,7 @@ async function getBySlug(slug) {
 async function create(productData) {
   const { error, value: product } = productSchema.validate(productData);
   if (error) {
-      throw error
+    throw error
   }
 
   const existing = await getBySlug(product.slug);
@@ -43,6 +47,7 @@ async function create(productData) {
 }
 
 async function update(id, productData) {
+  if (typeof id !== 'string') throw `id must be a string but ${typeof id} provided`;
   const { error, value: product } = productSchema.validate(productData);
   if (error) {
       throw error
@@ -55,6 +60,7 @@ async function update(id, productData) {
 }
 
 async function remove(id) {
+  if (typeof id !== 'string') throw `id must be a string but ${typeof id} provided`;
   const productsCollection = await products();
   const deletionInfo = await productsCollection.removeOne({ _id: ObjectId(id) });
 
@@ -64,6 +70,7 @@ async function remove(id) {
 }
 
 async function getbyName(name){
+  if (typeof name !== 'string') throw `name must be a string but ${typeof name} provided`;
   //adding helper func to filter by name
   const productsCollection = await products();
   const product = await productsCollection.findOne({ name: name });
@@ -87,6 +94,9 @@ async function getAllUpTo(limit){
 }
 
 async function updateStock(id, latestStock){
+  if (typeof id !== 'string') throw `id must be a string but ${typeof id} provided`;
+  if(!Number.isInteger(latestStock) || latestStock < 0) { throw "Invalid new stock specified"; }
+
   //helper func to update stock
   const productsCollection = await products();
   const updateInfo = await productsCollection.updateOne({ _id: ObjectId(id) }, { $set: {stock:latestStock} });

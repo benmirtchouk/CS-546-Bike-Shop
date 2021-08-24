@@ -7,18 +7,6 @@ const orders = require("../data").orders;
 const users = require("../data").users;
 const { ObjectId } = require('mongodb');
 
-router.get('/', async function (req, res, next) {
-    var product_list = await products.getAllInStock()
-    var msg = "";
-    let data = {
-        inStockList: product_list,
-        errorMessage: msg,
-        user: req.session.user,
-        page: { title: 'Orders' },
-    }; //need to verify if logged in as registered user
-    res.render('pages/order', data);
-})
-
 router.post('/cancel', async function (req, res, next) {
     let orderid = req.body.orderid;
 
