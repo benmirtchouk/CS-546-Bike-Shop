@@ -387,10 +387,16 @@ input.comment {
 }
 
 #keyword-search {
-    width: 33%;
-    margin-bottom: 10px;
+    margin-left: 10px;
 }
 
+.keyword-search-container {
+    width: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+}
 .full-review > h3 {
     font-size: 1.2em;
 }

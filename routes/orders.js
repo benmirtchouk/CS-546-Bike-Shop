@@ -19,38 +19,17 @@ router.get('/', async function (req, res, next) {
 })
 
 router.post('/cancel', async function (req, res, next) {
-    //console.log("Let's cancel something")
-    //console.log(req.body)
+    let orderid = req.body.orderid;
+
+    try{
+        if (typeof orderid !== 'string') throw 'orderid must be a string';
+        let oid = ObjectId(orderid);
+    } catch (e) {
+        return res.json({error: 'orderid must be a valid id string'});
+    }
     const _ = await orders.remove(req.body.orderid)
-    var orders_list = await orders.getOrdersByUser(req.session.user._id)
-    var ordersItemName = [];
-    for (const eachOrder of orders_list) {
-        for (const eachItem of eachOrder.items) {
-            var productInfo = await products.get(eachItem);
-            ordersItemName.push(productInfo.name)
-        }
-        eachOrder.ordersItemName = ordersItemName;
-    }
-
-    var past_orders_list = await orders.getPastOrdersByUser(req.session.user._id)
-    var past_ordersItemName = [];
-    for (const eachOrder of past_orders_list) {
-        for (const eachItem of eachOrder.items) {
-            var productInfo = await products.get(eachItem);
-            ordersItemName.push(productInfo.name)
-        }
-        eachOrder.ordersItemName = past_ordersItemName;
-    }
-
-    var msg = "";
-    let data = {
-        PendingOrders: orders_list,
-        PastOrders: past_orders_list,
-        errorMessage: msg,
-        user: req.session.user,
-        page: { title: 'Orders' },
-    }; //need to verify if logged in as registered user
-    res.render('pages/orderSummary', data);
+    
+    res.redirect('orders/pastOrders');
 })
 
 router.get('/pastOrders', async function (req, res, next) {

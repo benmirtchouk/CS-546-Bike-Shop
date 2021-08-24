@@ -2,7 +2,10 @@
 <h1>Product Offerings</h1> 
 
 <div class="filters">
-    <input type="text" id="keyword-search" placeholder="Filter Keyword"/>
+    <div class='keyword-search-container'>
+        <label for="keyword-search">Search:</label>
+        <input type="text" id="keyword-search" placeholder="Filter Keyword"/>
+    </div>
     <div class="filter-tags">
         {{#each tags}}
             <label for="tag_{{replace_spaces this}}">{{this}}</label>
