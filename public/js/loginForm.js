@@ -98,10 +98,45 @@ const validateEmailPasswordOrError = (emailField, passwordField) => {
                 } else {
                     $("#unauth-header").hide();
                     const portalLink = res.user.admin ? `<a href="/admin"> Admin Portal </a>` : "";
-                    $("#auth-header").html(`<div><p>${res.user.firstName}</p><p>${res.user.lastName}</p>${portalLink}<a href="/user/logout">Log Out</a></div>`);
+                    const cartlen = res.user.cart.length;
+                    const headerhtml = `
+                    <div class="nav--left">
+                        <a href="/">Homepage</a>
+                    </div>
+                    <div class="nav--right">
+                        ${portalLink}
+                        <span>Logged in as ${res.user.firstName} ${res.user.lastName}.</span>
+                        <a href="/user/cart">Cart${cartlen > 0 ? ' (' + cartlen + ')' : ''}</a>
+                        <a href="/orders/pastOrders">Orders</a>
+                        <a href="/user/logout">Log Out</a>
+                    </div>`;
+
+                    $("#auth-header").html(headerhtml);
                     $("#auth-header").show();
                 }
             });
+
+/*
+{{#if user}}
+    <div class="nav--left">
+        {{#if header.title}}{{header.title}}{{else}}<a href="/">Homepage</a>{{/if}}
+    </div>
+    <div class="nav--right">
+        {{#if user.admin}}
+            {{#if header.suppressAdminLink}}
+                <a href="/">Homepage</a>
+            {{else}}
+                <a href="/admin">Admin Panel</a>
+            {{/if}}
+
+        {{/if}}
+        <span>Logged in as {{user.firstName}}&nbsp;{{user.lastName}}.</span>
+        <a href="/user/cart">Cart{{#if user.cart.length}} ({{user.cart.length}}){{/if}}</a>
+        <a href="/orders/pastOrders">Orders</a>
+        <a href="/user/logout">Log Out</a>
+    </div>
+{{/if}}
+*/
 
             return false;
 
