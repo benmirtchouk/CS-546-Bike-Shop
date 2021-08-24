@@ -59,6 +59,17 @@ async function addToCart(id, productid) {
   }
 }
 
+async function clearCart(id) {
+  if (typeof id !== 'string') throw `id must be a string but ${typeof id} provided`;
+
+  const usersCollection = await users();
+  const updateInfo = usersCollection.updateOne({ _id: ObjectId(id) }, { $set: { cart: [] } });
+
+  if (updateInfo.modifiedCount === 0) {
+    throw `Could not update user with id ${id}`;
+  }
+}
+
 async function getCart(id) {
   if (typeof id !== 'string') throw `id must be a string but ${typeof id} provided`;
   const user = await this.get(id);
@@ -82,6 +93,7 @@ module.exports = {
   getByEmail,
   create,
   addToCart,
+    clearCart,
   getCart,
   remove,
   getByEmail

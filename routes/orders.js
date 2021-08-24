@@ -1,5 +1,5 @@
 const express = require('express');
-const userData = require("../data/orders");
+const userData = require("../data/users");
 const productData = require("../data/orders");
 const router = express.Router();
 const products = require("../data").products;
@@ -139,24 +139,14 @@ router.post('/checkout', async function (req, res) {
     }
     let msg = "";
     try {
-        const _ = orders.create(orderDetail)
-        var product_list = await products.getAllInStock()
-        let data = {
-            inStockList: product_list,
-            errorMessage: msg,
-            user: req.session.user
-        }; //need to verify if logged in as registered user
-        res.render('pages/order', data)
+        const _ = orders.create(orderDetail);
+        await userData.clearCart(user._id);
+        req.session.user.cart = [];
+        res.redirect('/orders/pastOrders');
     } catch (e) {
         msg = "Failed to submit order, please check stock number and email"
         res.render('pages/orderError', {errorMessage: msg, user: req.session.user})
     }
-
-    if (!_) {
-        msg = "Failed to submit order, please check stock number and email"
-        res.render('pages/orderError', {errorMessage: msg, user: req.session.user})
-    }
-
 })
 
 module.exports = router;
