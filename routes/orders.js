@@ -5,6 +5,7 @@ const router = express.Router();
 const products = require("../data").products;
 const orders = require("../data").orders;
 const users = require("../data").users;
+const { ObjectId } = require('mongodb');
 
 router.get('/', async function (req, res, next) {
     var product_list = await products.getAllInStock()
@@ -25,11 +26,12 @@ router.post('/cancel', async function (req, res, next) {
         if (typeof orderid !== 'string') throw 'orderid must be a string';
         let oid = ObjectId(orderid);
     } catch (e) {
+        console.log(e);
         return res.json({error: 'orderid must be a valid id string'});
     }
-    const _ = await orders.remove(req.body.orderid)
+    const _ = await orders.remove(orderid)
     
-    res.redirect('orders/pastOrders');
+    res.redirect('/orders/pastOrders');
 })
 
 router.get('/pastOrders', async function (req, res, next) {
