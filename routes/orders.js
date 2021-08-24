@@ -5,52 +5,21 @@ const router = express.Router();
 const products = require("../data").products;
 const orders = require("../data").orders;
 const users = require("../data").users;
-
-router.get('/', async function (req, res, next) {
-    var product_list = await products.getAllInStock()
-    var msg = "";
-    let data = {
-        inStockList: product_list,
-        errorMessage: msg,
-        user: req.session.user,
-        page: { title: 'Orders' },
-    }; //need to verify if logged in as registered user
-    res.render('pages/order', data);
-})
+const { ObjectId } = require('mongodb');
 
 router.post('/cancel', async function (req, res, next) {
-    //console.log("Let's cancel something")
-    //console.log(req.body)
-    const _ = await orders.remove(req.body.orderid)
-    var orders_list = await orders.getOrdersByUser(req.session.user._id)
-    var ordersItemName = [];
-    for (const eachOrder of orders_list) {
-        for (const eachItem of eachOrder.items) {
-            var productInfo = await products.get(eachItem);
-            ordersItemName.push(productInfo.name)
-        }
-        eachOrder.ordersItemName = ordersItemName;
-    }
+    let orderid = req.body.orderid;
 
-    var past_orders_list = await orders.getPastOrdersByUser(req.session.user._id)
-    var past_ordersItemName = [];
-    for (const eachOrder of past_orders_list) {
-        for (const eachItem of eachOrder.items) {
-            var productInfo = await products.get(eachItem);
-            ordersItemName.push(productInfo.name)
-        }
-        eachOrder.ordersItemName = past_ordersItemName;
+    try{
+        if (typeof orderid !== 'string') throw 'orderid must be a string';
+        let oid = ObjectId(orderid);
+    } catch (e) {
+        console.log(e);
+        return res.json({error: 'orderid must be a valid id string'});
     }
-
-    var msg = "";
-    let data = {
-        PendingOrders: orders_list,
-        PastOrders: past_orders_list,
-        errorMessage: msg,
-        user: req.session.user,
-        page: { title: 'Orders' },
-    }; //need to verify if logged in as registered user
-    res.render('pages/orderSummary', data);
+    const _ = await orders.remove(orderid)
+    
+    res.redirect('/orders/pastOrders');
 })
 
 router.get('/pastOrders', async function (req, res, next) {
