@@ -20,7 +20,7 @@ router.get('/', async function (req, res, next) {
 router.post('/cancel', async function (req, res, next) {
     //console.log("Let's cancel something")
     //console.log(req.body)
-    const _ = await orders.cancel(req.body.id)
+    const _ = await orders.remove(req.body.id)
     var orders_list = await orders.getOrdersByUser(req.session.user._id)
     var ordersItemName = [];
     for (const eachOrder of orders_list) {
