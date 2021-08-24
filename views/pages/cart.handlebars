@@ -3,7 +3,7 @@
         <a class="card mb-4 mt-4" href="/bikes/{{slug}}">
             <div class="row g-0">
                 <div class="col-md-4">
-                    <img src="{{pictures.[0]}}" class="img-fluid rounded-start" alt="...">
+                    <img src="{{pictures.[0]}}" class="img-fluid rounded-start" alt="Bike">
                 </div>
                 <div class="col-md-8">
                     <div class="card-body">
@@ -15,4 +15,7 @@
             </div>
         </a>
     {{/each}}
+    <form action="/orders/checkout" method="POST">
+        <input type="submit" name="checkout" value="Checkout" />
+    </form>
 </div>
