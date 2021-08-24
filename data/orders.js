@@ -26,7 +26,33 @@ async function getOrdersByUser(userId){
   try{
     const ordersCollection = await orders();
     let allOrder = await ordersCollection.find({owner: ObjectId(userId)}).toArray()
-    //console.log(allOrder);
+
+    allOrder = allOrder.map(order => {
+      order._id = order._id.toString();
+      order.items = order.items.map((id) => id.toString());
+      order.owner = order.owner.toString();
+      return order;
+    });
+
+    return allOrder;
+  }catch(e){
+    console.log('Failed to find orders :'+e)
+    return null;
+  }
+}
+
+async function getPendingOrdersByUser(userId){
+  if (typeof userId !== 'string') throw `user id must be a string but ${typeof id} provided`;
+  try{
+    const ordersCollection = await orders();
+    let allOrder = await ordersCollection.find({owner: ObjectId(userId), status:{$nin: ['completed','cancelled','delivered']}}).toArray()
+    allOrder = allOrder.map(order => {
+      order._id = order._id.toString();
+      order.items = order.items.map((id) => id.toString());
+      order.owner = order.owner.toString();
+      return order;
+    });
+
     return allOrder;
   }catch(e){
     console.log('Failed to find orders :'+e)
@@ -39,7 +65,13 @@ async function getPastOrdersByUser(userId){
   try{
     const ordersCollection = await orders();
     let allOrder = await ordersCollection.find({owner: ObjectId(userId), status:{$in: ['completed','cancelled','delivered']}}).toArray()
-    //console.log(allOrder);
+    allOrder = allOrder.map(order => {
+      order._id = order._id.toString();
+      order.items = order.items.map((id) => id.toString());
+      order.owner = order.owner.toString();
+      return order;
+    });
+
     return allOrder;
   }catch(e){
     console.log('Failed to find orders :'+e)
@@ -82,6 +114,7 @@ async function create(order_data) {
   if (insertInfo.insertedCount === 0) throw 'Could not add new order';
 
   let inserted = insertInfo.ops[0];
+  inserted._id = inserted._id.toString();
   inserted.items = inserted.items.map((id) => id.toString());
   inserted.owner = inserted.owner.toString();
 
@@ -145,5 +178,6 @@ module.exports = {
   remove,
   aggregateOrders,
   getOrdersByUser,
-  getPastOrdersByUser
+  getPastOrdersByUser,
+  getPendingOrdersByUser
 };

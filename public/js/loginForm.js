@@ -189,7 +189,21 @@ const validateEmailPasswordOrError = (emailField, passwordField) => {
                     alert(res.error);
                 } else {
                     $("#unauth-header").hide();
-                    $("#auth-header").html(`<div><p>${res.user.firstName}</p><p>${res.user.lastName}</p><a href="/user/logout">Log Out</a></div>`);
+                    const portalLink = res.user.admin ? `<a href="/admin"> Admin Portal </a>` : "";
+                    const cartlen = res.user.cart.length;
+                    const headerhtml = `
+                    <div class="nav--left">
+                        <a href="/">Homepage</a>
+                    </div>
+                    <div class="nav--right">
+                        ${portalLink}
+                        <span>Logged in as ${res.user.firstName} ${res.user.lastName}.</span>
+                        <a href="/user/cart">Cart${cartlen > 0 ? ' (' + cartlen + ')' : ''}</a>
+                        <a href="/orders/pastOrders">Orders</a>
+                        <a href="/user/logout">Log Out</a>
+                    </div>`;
+
+                    $("#auth-header").html(headerhtml);
                     $("#auth-header").show();
                 }
             });

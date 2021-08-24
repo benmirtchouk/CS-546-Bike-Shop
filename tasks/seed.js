@@ -107,7 +107,7 @@ async function seedDB() {
 
         const productsData = 
         [
-            createProduct("A bike", "The best bike", ["Fast", "Colorful"], 3, ["/images/1.jpg", "/images/2.jpg"], 3000.15, specs[2]),
+            createProduct("A bike", "The best bike", ["Fast", "Colorful"], 5, ["/images/1.jpg", "/images/2.jpg"], 3000.15, specs[2]),
             createProduct("Cheap Bike", "The cheapest bike money can buy", ["Slow", "Rusted", "No Kickstand"], 10, ["/images/3.jpg"], 100.20, specs[0]),
             createProduct("Average Bike", "A normal street bike", ["Street"], 20, ["/images/4.jpg", "/images/5.jpg"], 150.60, specs[1]),
             createProduct("Child's Training Bike", "The perfect training bike!", ["Small", "Child", "Training Wheels"], 5, ["/images/6.jpg", "/images/7.jpg", "/images/8.jpg"], 50.10, specs[0])
@@ -173,9 +173,14 @@ async function seedDB() {
             const {_id} = await data.orders.create(newOrder);
             orderIdsMap[_id] = newOrder;
         }
-        console.log("orders seeded");
         const orderIds = Object.keys(orderIdsMap);
 
+        let {_id: order_id_1} = await data.orders.create(createOrder([mongoBikeIds[0]], userIds[0], '7/31/2021',121));
+        let {_id: order_id_2} = await data.orders.create(createOrder([mongoBikeIds[1]], userIds[0], '7/31/2021',121));
+        await data.orders.updateStatus(order_id_1, 'completed');
+        await data.orders.updateStatus(order_id_2, 'cancelled');
+
+        console.log("orders seeded");
         //adding Reviews
         const reviewIdsMap = {};
         for(const orderId of orderIds){

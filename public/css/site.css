@@ -390,3 +390,7 @@ input.comment {
     width: 33%;
     margin-bottom: 10px;
 }
+
+.full-review > h3 {
+    font-size: 1.2em;
+}

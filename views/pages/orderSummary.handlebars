@@ -28,12 +28,14 @@
             <th>Item</th>
             <th>OrderDate</th>
             <th>OrderStatus</th>
+            <th>Price</th>
         </tr>
         {{#each PastOrders}}
         <tr>
-            <td>{{ordersItemName}}</td>
+            <td>{{names}}</td>
             <td>{{datePlaced}}</td>
             <td>{{status}}</td>
+            <td class="price">{{price}}</td>
         </tr>
         {{/each}}
     </table>

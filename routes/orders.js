@@ -54,7 +54,9 @@ router.post('/cancel', async function (req, res, next) {
 })
 
 router.get('/pastOrders', async function (req, res, next) {
-    var orders_list = await orders.getOrdersByUser(req.session.user._id)
+    if (!req.session.user) return res.status(401).json({error: 'You must be logged in to see orders.'});
+    
+    var orders_list = await orders.getPendingOrdersByUser(req.session.user._id)
     var ordersItemName = [];
     for (const eachOrder of orders_list) {
         for (const eachItem of eachOrder.items) {
@@ -67,11 +69,12 @@ router.get('/pastOrders', async function (req, res, next) {
     var past_orders_list = await orders.getPastOrdersByUser(req.session.user._id)
     var past_ordersItemName = [];
     for (const eachOrder of past_orders_list) {
+        let names = []
         for (const eachItem of eachOrder.items) {
             var productInfo = await products.get(eachItem);
-            ordersItemName.push(productInfo.name)
+            names.push(productInfo.name);
         }
-        eachOrder.ordersItemName = past_ordersItemName;
+        eachOrder.names = names;
     }
 
     var msg = "";
