@@ -30,10 +30,21 @@ router.post("/cart/:id", async (req, res) => {
         let productId = req.params.id;
         if (typeof productId !== 'string')
             return res.json({error: 'Invalid product ID. Must be string.'});
+
+        try {
+            const product = await productData.get(productId);
+            if (product === null) {
+                return res.json({error: 'Invalid product ID. No corresponding product.'});
+            }
+        } catch (e) {
+            return res.json({error: 'Invalid product id supplied.'});
+        }
+
         await usersData.addToCart(req.session.user._id, productId);
         req.session.user.cart.push(productId)
         return res.redirect('/user/cart')
     } catch (e) {
+        console.log(e);
         return res.json({error: e});
     }
 })

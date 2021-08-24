@@ -5,8 +5,8 @@
     <input type="text" id="keyword-search" placeholder="Filter Keyword"/>
     <div class="filter-tags">
         {{#each tags}}
-            <label for="tag_{{this}}">{{this}}</label>
-            <input type="checkbox" id="tag_{{this}}" name="{{this}}"/>
+            <label for="tag_{{replace_spaces this}}">{{this}}</label>
+            <input type="checkbox" id="tag_{{replace_spaces this}}" name="{{this}}"/>
         {{/each}}
     </div>
 </div>

@@ -3,4 +3,5 @@ module.exports = {
   sub: (a,b) => a-b,
   multiply: (n, s) => s.repeat(n),
   ifinside: (x, arr, y, n) => arr.indexOf(x) != -1 ? y : n,
+  replace_spaces: (s) => s.replace(/ /g, '_'),
 }

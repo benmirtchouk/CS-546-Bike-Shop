@@ -1,119 +1,134 @@
 const express = require('express');
+const userData = require("../data/users");
+const productData = require("../data/products");
 const router = express.Router();
 const products = require("../data").products;
 const orders = require("../data").orders;
 const users = require("../data").users;
 
-router.get('/', async function(req, res, next){
+router.get('/', async function (req, res, next) {
     var product_list = await products.getAllInStock()
     var msg = "";
     let data = {
-        inStockList: product_list, 
+        inStockList: product_list,
         errorMessage: msg,
-        user: req.session.user
+        user: req.session.user,
+        page: { title: 'Orders' },
     }; //need to verify if logged in as registered user
     res.render('pages/order', data);
 })
 
-router.post('/cancel', async function(req, res, next){
+router.post('/cancel', async function (req, res, next) {
     //console.log("Let's cancel something")
     //console.log(req.body)
-    const _ = await orders.remove(req.body.id)
+    const _ = await orders.remove(req.body.orderid)
     var orders_list = await orders.getOrdersByUser(req.session.user._id)
     var ordersItemName = [];
-    for(const eachOrder of orders_list){
-        for(const eachItem of eachOrder.items){
+    for (const eachOrder of orders_list) {
+        for (const eachItem of eachOrder.items) {
             var productInfo = await products.get(eachItem);
             ordersItemName.push(productInfo.name)
         }
-        eachOrder.ordersItemName =  ordersItemName;
+        eachOrder.ordersItemName = ordersItemName;
     }
 
     var past_orders_list = await orders.getPastOrdersByUser(req.session.user._id)
     var past_ordersItemName = [];
-    for(const eachOrder of past_orders_list){
-        for(const eachItem of eachOrder.items){
+    for (const eachOrder of past_orders_list) {
+        for (const eachItem of eachOrder.items) {
             var productInfo = await products.get(eachItem);
             ordersItemName.push(productInfo.name)
         }
-        eachOrder.ordersItemName =  past_ordersItemName;
+        eachOrder.ordersItemName = past_ordersItemName;
     }
 
     var msg = "";
     let data = {
-        PendingOrders: orders_list, 
+        PendingOrders: orders_list,
         PastOrders: past_orders_list,
         errorMessage: msg,
-        user: req.session.user
+        user: req.session.user,
+        page: { title: 'Orders' },
     }; //need to verify if logged in as registered user
     res.render('pages/orderSummary', data);
 })
 
-router.get('/pastOrders', async function(req, res, next){
+router.get('/pastOrders', async function (req, res, next) {
     var orders_list = await orders.getOrdersByUser(req.session.user._id)
     var ordersItemName = [];
-    for(const eachOrder of orders_list){
-        for(const eachItem of eachOrder.items){
+    for (const eachOrder of orders_list) {
+        for (const eachItem of eachOrder.items) {
             var productInfo = await products.get(eachItem);
             ordersItemName.push(productInfo.name)
         }
-        eachOrder.ordersItemName =  ordersItemName;
+        eachOrder.ordersItemName = ordersItemName;
     }
 
     var past_orders_list = await orders.getPastOrdersByUser(req.session.user._id)
     var past_ordersItemName = [];
-    for(const eachOrder of past_orders_list){
-        for(const eachItem of eachOrder.items){
+    for (const eachOrder of past_orders_list) {
+        for (const eachItem of eachOrder.items) {
             var productInfo = await products.get(eachItem);
             ordersItemName.push(productInfo.name)
         }
-        eachOrder.ordersItemName =  past_ordersItemName;
+        eachOrder.ordersItemName = past_ordersItemName;
     }
 
     var msg = "";
     let data = {
-        PendingOrders: orders_list, 
+        PendingOrders: orders_list,
         PastOrders: past_orders_list,
         errorMessage: msg,
-        user: req.session.user
+        user: req.session.user,
+        page: { title: 'Orders' },
     }; //need to verify if logged in as registered user
     res.render('pages/orderSummary', data);
-})
+});
 
-router.post('/', async function(req, res){
-    let newOrder = req.body;
-    console.log(newOrder);
-    //get required info
-    var userID = await users.getByEmail(newOrder.email);
-    var orderedProduct = await products.get(newOrder.product);
-    var orderDate = new Date();
-    var orderedItems = [];
-    for (var i=0; i<parseInt(newOrder.amount,10); i++){
-        orderedItems.push(newOrder.product);
-    }
-    //post order to mongoDB
-    var orderDetail = {owner:userID._id, items : orderedItems, datePlaced:orderDate, price:orderedProduct.price}
-    var msg = "";
-    console.log(orderDetail);
-    try{
-        const _ = orders.create(orderDetail)
-        var product_list = await products.getAllInStock()
-        let data = {
-            inStockList: product_list, 
-            errorMessage: msg,
-            user: req.session.user
-        }; //need to verify if logged in as registered user
-        res.render('pages/order', data)
-    }catch(e){
-        msg = "Failed to submit order, please check stock number and email"
-        res.render('pages/orderError',{errorMessage: msg, user: req.session.user})
-    }
+router.post('/checkout', async function (req, res) {
+    const user = req.session.user
     
-    if(!_){
-        msg = "Failed to submit order, please check stock number and email"
-        res.render('pages/orderError',{errorMessage: msg, user: req.session.user})        
+    if (!user) {
+        return res.status(400).json({message: "You are not logged in."});
+    }
+    if (user.cart.length === 0) {
+        return res.status(400).json({message: "Cannot checkout an empty cart."});
     }
 
+    let total = 0;
+    for (let productid of user.cart) {
+        let product = await productData.get(productid);
+        if (product === null) {
+            return req.status(404).json({message: 'invalid product id'});
+        } else {
+            total += product.price;
+        }
+    }
+
+    total = total.toFixed(2);
+
+    //post order to mongoDB
+    let orderDetail = {
+        owner: user._id,
+        items: user.cart,
+        datePlaced: new Date().toISOString(),
+        price: total
+    }
+    let msg = "";
+    try {
+        const o = await orders.create(orderDetail);
+        await userData.clearCart(user._id);
+        req.session.user.cart = [];
+        res.redirect('/orders/pastOrders');
+    } catch (e) {
+        console.log("error", e);
+        msg = "Failed to submit order, please check stock number and email"
+        res.render('pages/orderError', {
+            errorMessage: msg, 
+            user: req.session.user,
+            page: { title: 'Order Error' }
+        });
+    }
 })
 
 module.exports = router;

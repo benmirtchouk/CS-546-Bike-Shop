@@ -9,8 +9,8 @@
 </head>
 <body>
 <header>
-    {{#if user}}
-        <div id="auth-header">
+    <div id="auth-header">
+        {{#if user}}
             <div class="nav--left">
                 {{#if header.title}}{{header.title}}{{else}}<a href="/">Homepage</a>{{/if}}
             </div>
@@ -28,8 +28,8 @@
                 <a href="/orders/pastOrders">Orders</a>
                 <a href="/user/logout">Log Out</a>
             </div>
-        </div>
-    {{/if}}
+        {{/if}}
+    </div>
     {{#unless user}}
         <div id="unauth-header">
             <div class="nav--left">
@@ -111,7 +111,6 @@
         integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
         crossorigin="anonymous"></script>
 <script src="/js/loginForm.js"></script>
-<script src="/js/orderTotal.js"></script>
 <script src="/js/price.js"></script>
 
 {{#if partial}}
