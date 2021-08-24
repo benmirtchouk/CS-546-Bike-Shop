@@ -16,7 +16,10 @@
             </div>
         </a>
     {{/each}}
-    <form action="/orders/checkout" method="POST">
-        <input type="submit" name="checkout" value="Checkout" />
-    </form>
+
+    {{#if cart}}
+        <form action="/orders/checkout" method="POST">
+            <input type="submit" name="checkout" value="Checkout" />
+        </form>
+    {{/if}}
 </div>

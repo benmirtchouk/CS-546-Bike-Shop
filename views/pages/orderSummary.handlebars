@@ -1,42 +1,39 @@
 {{#if user}}
-<h1>Pending Orders</h1> 
+    <h1>Pending Orders</h1> 
     <table style="width:100%">
         <tr>
-            <th>OrderID</th>
             <th>Item</th>
             <th>OrderDate</th>
             <th>OrderStatus</th>
+            <th>Price</th>
             <th>Actions</th>
         </tr>
         {{#each PendingOrders}}
         <tr>
-            <th id="prodID">{{_id}}</th>
-            <th id="ordersItemName">{{ordersItemName}}</th>
-            <th id="datePlaced">{{datePlaced}}</th>
-            <th id="status">{{status}}</th>
-            <th><form id="cancelOrder" action = "/orders/cancel" method="POST">
-                <label>OrderID</label>
-                <input type="text" class="form-control" name="id" placeholder="{{_id}}" required=""/>
-                <button type="submit" value="{{_id}}">Cancel Order</button>
+            <td class="ordersItemName">{{ordersItemName}}</td>
+            <td class="datePlaced">{{datePlaced}}</td>
+            <td class="status">{{status}}</td>
+            <td class="price">{{price}}</td>
+            <td><form id="cancelOrder_{{_id}}" action = "/orders/cancel" method="POST">
+                <input type="hidden" name="orderid" value="{{_id}}"/>
+                <button type="submit">Cancel Order</button>
                 </form>
-            </th>
+            </td>
         </tr>
         {{/each}}
     </table>
-<h1>Past Orders</h1> 
+    <h1>Past Orders</h1> 
     <table style="width:100%">
         <tr>
-            <th>OrderID</th>
             <th>Item</th>
             <th>OrderDate</th>
             <th>OrderStatus</th>
         </tr>
         {{#each PastOrders}}
         <tr>
-            <th>{{_id}}</th>
-            <th>{{ordersItemName}}</th>
-            <th>{{datePlaced}}</th>
-            <th>{{status}}</th>
+            <td>{{ordersItemName}}</td>
+            <td>{{datePlaced}}</td>
+            <td>{{status}}</td>
         </tr>
         {{/each}}
     </table>

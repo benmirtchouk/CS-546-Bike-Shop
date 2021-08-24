@@ -1,6 +1,6 @@
 const express = require('express');
 const userData = require("../data/users");
-const productData = require("../data/orders");
+const productData = require("../data/products");
 const router = express.Router();
 const products = require("../data").products;
 const orders = require("../data").orders;
@@ -20,7 +20,7 @@ router.get('/', async function (req, res, next) {
 router.post('/cancel', async function (req, res, next) {
     //console.log("Let's cancel something")
     //console.log(req.body)
-    const _ = await orders.remove(req.body.id)
+    const _ = await orders.remove(req.body.orderid)
     var orders_list = await orders.getOrdersByUser(req.session.user._id)
     var ordersItemName = [];
     for (const eachOrder of orders_list) {
@@ -84,7 +84,6 @@ router.get('/pastOrders', async function (req, res, next) {
 
 router.post('/', async function (req, res) {
     let newOrder = req.body;
-    console.log(newOrder);
     //get required info
     var userID = await users.getByEmail(newOrder.email);
     var orderedProduct = await products.get(newOrder.product);
@@ -96,7 +95,6 @@ router.post('/', async function (req, res) {
     //post order to mongoDB
     var orderDetail = {owner: userID._id, items: orderedItems, datePlaced: orderDate, price: orderedProduct.price}
     var msg = "";
-    console.log(orderDetail);
     try {
         const _ = orders.create(orderDetail)
         var product_list = await products.getAllInStock()
@@ -120,30 +118,41 @@ router.post('/', async function (req, res) {
 
 router.post('/checkout', async function (req, res) {
     if (!req.session.user) {
-        res.status(400).json({message: "You are not logged in."});
-        return;
+        return res.status(400).json({message: "You are not logged in."});
+    }
+    if (user.cart.length === 0) {
+        return res.status(400).json({message: "Cannot checkout an empty cart."});
     }
 
     const user = req.session.user
-    const itemList = user.cart.map(async (id) =>
-        await productData.get(id)
-    )
-    const total = itemList.reduce((sum, item) => sum + item.price, 0)
+    let total = 0;
+
+    for (let productid of user.cart) {
+        let product = await productData.get(productid);
+        if (product === null) {
+            return req.status(404).json({message: 'invalid product id'});
+        } else {
+            total += product.price;
+        }
+    }
+
+    total = total.toFixed(2);
 
     //post order to mongoDB
     let orderDetail = {
         owner: user._id,
         items: user.cart,
-        datePlaced: new Date(),
+        datePlaced: new Date().toISOString(),
         price: total
     }
     let msg = "";
     try {
-        const _ = orders.create(orderDetail);
+        const o = await orders.create(orderDetail);
         await userData.clearCart(user._id);
         req.session.user.cart = [];
         res.redirect('/orders/pastOrders');
     } catch (e) {
+        console.log("error", e);
         msg = "Failed to submit order, please check stock number and email"
         res.render('pages/orderError', {errorMessage: msg, user: req.session.user})
     }
